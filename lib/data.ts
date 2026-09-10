@@ -1,5 +1,6 @@
-// Placeholder content data. Once Sanity is wired up, these will be replaced
-// by live queries (see lib/sanity/queries.ts and the schema files in studio/).
+// Placeholder / seed content. Once the Sanity Studio has real entries,
+// lib/content.ts pulls from there instead - these arrays are only the
+// fallback shown before that.
 
 export const services = [
   {
@@ -25,6 +26,42 @@ export const services = [
     name: "Brand & Social Retainers",
     summary:
       "A recurring monthly shoot day so your social channels never run dry - planned, shot, and delivered on a schedule.",
+  },
+];
+
+// Real pricing structure Anton already sends to clients (from
+// yasirov.com's content-creator pricing page) - same packaging works for a
+// business shoot as it does for an event.
+export const pricingPackages = [
+  {
+    slug: "classic",
+    name: "Classic",
+    tagline: "Told with care",
+    price: "€700",
+    features: [
+      "1 content creator",
+      "Up to 4 hours of coverage",
+      "30 photos",
+      "1 reel (up to 45 seconds)",
+      "1 reel (up to 15 seconds)",
+      "RAW materials included",
+      "Delivery within 72 hours",
+    ],
+  },
+  {
+    slug: "grand",
+    name: "Grand",
+    tagline: "Remembered in full",
+    price: "€1,200",
+    features: [
+      "1 content creator",
+      "Up to 10 hours of coverage",
+      "50-70 photos",
+      "1 reel (up to 45 seconds)",
+      "3 reels (up to 15 seconds)",
+      "RAW materials included",
+      "Delivery within 72 hours",
+    ],
   },
 ];
 
@@ -66,11 +103,11 @@ export const faqs = [
   {
     question: "How fast is delivery?",
     answer:
-      "Most shoots are delivered within 3-5 business days. Rush delivery is available on request.",
+      "Most shoots are delivered within 72 hours. Rush delivery is available on request.",
   },
   {
-    question: "Do you provide both photo and video from one shoot?",
+    question: "Are travel costs included?",
     answer:
-      "Yes. Most bookings combine stills and short-form video in a single session so you get everything you need for your website and social channels at once.",
+      "Transport is included in the package price for shoots taking place on Lake Como itself. Locations further out are quoted separately.",
   },
 ];

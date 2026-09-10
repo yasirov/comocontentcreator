@@ -30,9 +30,9 @@ export default function AboutPage() {
           {siteConfig.founders.map((founder) => (
             <div
               key={founder.name}
-              className="rounded-2xl border border-border bg-surface p-6"
+              className="rounded-3xl border border-border bg-surface p-6"
             >
-              <p className="font-display text-lg text-foreground">
+              <p className="text-lg font-semibold text-foreground">
                 {founder.name}
               </p>
               <p className="mt-1 text-sm">{founder.role}</p>

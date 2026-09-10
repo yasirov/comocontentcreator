@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { SectionHeading } from "@/components/SectionHeading";
+import { PillButton } from "@/components/PillButton";
+import { PricingCard } from "@/components/PricingCard";
 import { JsonLd } from "@/components/JsonLd";
 import { serviceSchema } from "@/lib/schema";
+import { pricingPackages } from "@/lib/data";
 import { getServices } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -23,7 +25,7 @@ export default async function ServicesPage() {
       />
       <div className="mx-auto max-w-6xl px-6 py-20">
         <SectionHeading
-          eyebrow="Services"
+          eyebrow="Who we work with"
           title="Content packages for Lake Como businesses"
           description="Every package includes on-location shooting, editing, and delivery in formats ready for your website and social channels."
         />
@@ -34,25 +36,39 @@ export default async function ServicesPage() {
               id={service.slug}
               className="grid gap-4 border-t border-border pt-8 md:grid-cols-3"
             >
-              <h2 className="font-display text-2xl">{service.name}</h2>
+              <h2 className="text-2xl font-semibold">{service.name}</h2>
               <p className="md:col-span-2 text-muted leading-relaxed">
                 {service.summary}
               </p>
             </div>
           ))}
         </div>
-        <div className="mt-16 rounded-2xl border border-border bg-surface p-8 text-center">
-          <p className="font-display text-2xl">Not sure which package fits?</p>
-          <p className="mt-2 text-muted">
-            Tell us about your business and we&apos;ll recommend a shoot plan.
-          </p>
-          <Link
-            href="/contact"
-            className="mt-6 inline-block rounded-full bg-accent px-6 py-3 text-sm font-medium text-accent-foreground transition hover:opacity-90"
-          >
-            Get in touch
-          </Link>
+      </div>
+
+      <div className="bg-surface">
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <SectionHeading
+            eyebrow="Our pricing"
+            title="Flexible pricing for every stage"
+            align="center"
+            description="Transport is included in the price for shoots taking place on Lake Como."
+          />
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 max-w-3xl mx-auto">
+            {pricingPackages.map((pkg) => (
+              <PricingCard key={pkg.slug} {...pkg} />
+            ))}
+          </div>
         </div>
+      </div>
+
+      <div className="mx-auto max-w-6xl px-6 py-20 text-center">
+        <p className="text-2xl font-semibold">Not sure which package fits?</p>
+        <p className="mt-2 text-muted">
+          Tell us about your business and we&apos;ll recommend a shoot plan.
+        </p>
+        <PillButton href="/contact" className="mt-6">
+          Get in touch
+        </PillButton>
       </div>
     </>
   );

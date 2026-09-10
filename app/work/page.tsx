@@ -20,7 +20,7 @@ export default async function WorkPage() {
           (item: PortfolioItem) => (
             <article
               key={item.slug}
-              className="overflow-hidden rounded-2xl border border-border bg-surface"
+              className="overflow-hidden rounded-3xl border border-border bg-surface"
             >
               {item.coverImageUrl ? (
                 <div className="relative aspect-video">
@@ -38,7 +38,7 @@ export default async function WorkPage() {
                 <p className="text-xs font-medium uppercase tracking-wide text-accent">
                   {item.category}
                 </p>
-                <h2 className="font-display mt-2 text-xl">{item.title}</h2>
+                <h2 className="mt-2 text-xl font-semibold">{item.title}</h2>
                 <p className="mt-2 text-sm text-muted leading-relaxed">
                   {item.summary}
                 </p>
