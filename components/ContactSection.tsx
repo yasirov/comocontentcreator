@@ -2,7 +2,7 @@ import { siteConfig } from "@/lib/site-config";
 
 export function ContactSection() {
   return (
-    <section id="contact" className="mx-auto max-w-6xl px-6 py-20">
+    <section id="contact" className="anchor-section mx-auto max-w-6xl px-6 py-20">
       <div className="grid gap-12 md:grid-cols-2">
         <div>
           <h2 className="text-6xl font-semibold tracking-tight">Contact.</h2>

@@ -3,13 +3,22 @@ export const siteConfig = {
   legalName: "YASIROV Films",
   tagline: "Content creation on Lake Como, made simple.",
   description:
-    "Wedding and business content creation - the art of instant, vertical storytelling. Photo and video for hotels, restaurants, vendors, and brands on Lake Como.",
+    "Wedding content creation - the art of instant, vertical storytelling. Photo and video content for your wedding day on Lake Como.",
   url: "https://comocontentcreator.com",
   founders: [
-    { name: "Anton Yasirov", role: "Director of Photography & Video", instagram: "https://www.instagram.com/anton_yasirov" },
-    { name: "Sabina Yasirova", role: "Producer & Content Strategist", instagram: "https://www.instagram.com/sabina_yasirova" },
+    {
+      name: "Anton Yasirov",
+      role: "Director of Photography & Video",
+      instagram: "https://www.instagram.com/anton_yasirov",
+    },
+    {
+      name: "Sabina Yasirova",
+      role: "Producer & Content Strategist",
+      instagram: "https://www.instagram.com/sabina_yasirova",
+    },
   ],
   instagram: "https://www.instagram.com/comocontentcreator/",
+  instagramHandle: "@comocontentcreator",
   parentBrand: {
     name: "YASIROV Films",
     url: "https://yasirov.com",
@@ -30,11 +39,11 @@ export const siteConfig = {
       "Lake Como",
     ],
   },
+  // Everything lives on one page - these are anchors on Home, except
+  // Journal, which is its own blog section/route.
   nav: [
-    { label: "Work", href: "/work" },
-    { label: "Services", href: "/services" },
-    { label: "About", href: "/about" },
+    { label: "About", href: "/#about" },
+    { label: "Pricing", href: "/#pricing" },
     { label: "Journal", href: "/journal" },
-    { label: "Contact", href: "/contact" },
   ],
 } as const;

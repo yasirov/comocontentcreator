@@ -1,37 +1,17 @@
 import { sanityClient } from "@/lib/sanity/client";
-import {
-  articlesQuery,
-  portfolioItemsQuery,
-  servicesQuery,
-  testimonialsQuery,
-} from "@/lib/sanity/queries";
-import {
-  services as placeholderServices,
-  portfolioItems as placeholderPortfolioItems,
-} from "@/lib/data";
+import { testimonialsQuery, articlesQuery } from "@/lib/sanity/queries";
+import { testimonials as placeholderTestimonials } from "@/lib/data";
 
 // Fetches live content from Sanity, falling back to the placeholder data in
 // lib/data.ts whenever the Studio doesn't have anything published yet (or
 // the request fails, e.g. before NEXT_PUBLIC_SANITY_PROJECT_ID is set) - so
-// the site never shows an empty page while content is still being entered.
-
-export type ServiceItem = {
-  slug: string;
-  name: string;
-  summary: string;
-};
-
-export type PortfolioItem = {
-  slug: string;
-  title: string;
-  category: string;
-  summary: string;
-  coverImageUrl?: string;
-};
+// the site never shows an empty section while content is still being
+// entered.
 
 export type Testimonial = {
-  clientName: string;
   quote: string;
+  name: string;
+  role?: string;
 };
 
 export type Article = {
@@ -41,30 +21,16 @@ export type Article = {
   publishedAt: string;
 };
 
-export async function getServices(): Promise<ServiceItem[]> {
+export async function getTestimonials(): Promise<Testimonial[]> {
   try {
-    const items: ServiceItem[] = await sanityClient.fetch(servicesQuery);
-    return items?.length ? items : placeholderServices;
+    const items: {
+      clientName: string;
+      quote: string;
+    }[] = await sanityClient.fetch(testimonialsQuery);
+    if (!items?.length) return placeholderTestimonials;
+    return items.map((t) => ({ quote: t.quote, name: t.clientName }));
   } catch {
-    return placeholderServices;
-  }
-}
-
-export async function getPortfolioItems(): Promise<PortfolioItem[]> {
-  try {
-    const items: PortfolioItem[] =
-      await sanityClient.fetch(portfolioItemsQuery);
-    return items?.length ? items : placeholderPortfolioItems;
-  } catch {
-    return placeholderPortfolioItems;
-  }
-}
-
-export async function getFeaturedTestimonials(): Promise<Testimonial[]> {
-  try {
-    return await sanityClient.fetch(testimonialsQuery);
-  } catch {
-    return [];
+    return placeholderTestimonials;
   }
 }
 
