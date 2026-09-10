@@ -1,50 +1,86 @@
+"use client";
+
+import { useState, type FormEvent } from "react";
 import { siteConfig } from "@/lib/site-config";
 
-export function ContactSection() {
+export function ContactSection({
+  heading,
+  intro,
+  phone,
+  email,
+  instagramUrl,
+  packages,
+}: {
+  heading: string;
+  intro: string;
+  phone: string;
+  email: string;
+  instagramUrl: string;
+  packages: { name: string; price: string }[];
+}) {
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle"
+  );
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setStatus("sending");
+    const form = e.currentTarget;
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error("failed");
+      setStatus("sent");
+      form.reset();
+    } catch {
+      setStatus("error");
+    }
+  }
+
   return (
-    <section id="contact" className="mx-auto max-w-6xl px-6 py-20">
+    <section id="contact" className="anchor-section mx-auto max-w-6xl px-6 py-20">
       <div className="grid gap-12 md:grid-cols-2">
         <div>
-          <h2 className="text-6xl font-semibold tracking-tight">Contact.</h2>
-          <p className="mt-4 max-w-sm text-muted leading-relaxed">
-            Share your project details below. We&apos;ll connect with you to
-            explore your vision and discuss how to move from concept to
-            screen.
-          </p>
+          <h2 className="text-6xl font-semibold tracking-tight">{heading}</h2>
+          <p className="mt-4 max-w-sm text-muted leading-relaxed">{intro}</p>
           <div className="mt-10 space-y-2 text-sm">
             <p>
               <a
-                href={`tel:${siteConfig.contactPhone.replace(/\s/g, "")}`}
+                href={`tel:${phone.replace(/\s/g, "")}`}
                 className="font-medium hover:text-muted"
               >
-                {siteConfig.contactPhone}
+                {phone}
               </a>
             </p>
             <p>
               <a
-                href={`mailto:${siteConfig.contactEmail}`}
+                href={`mailto:${email}`}
                 className="font-medium hover:text-muted"
               >
-                {siteConfig.contactEmail}
+                {email}
               </a>
             </p>
             <p>
               <a
-                href={siteConfig.instagram}
+                href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-medium hover:text-muted"
               >
-                Instagram
+                {siteConfig.instagramHandle}
               </a>
             </p>
           </div>
         </div>
 
         <form
-          className="space-y-5 rounded-3xl bg-foreground p-8 text-background"
-          method="post"
-          action="#"
+          className="space-y-5 rounded-3xl border border-border bg-background p-6 sm:p-8"
+          onSubmit={handleSubmit}
         >
           <label className="block text-sm">
             Names
@@ -52,7 +88,7 @@ export function ContactSection() {
               name="names"
               type="text"
               required
-              className="mt-2 w-full rounded-lg bg-background/10 px-4 py-3 text-sm text-background outline-none ring-1 ring-background/20 focus:ring-accent"
+              className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus:border-foreground/40"
             />
           </label>
           <label className="block text-sm">
@@ -61,7 +97,7 @@ export function ContactSection() {
               name="email"
               type="email"
               required
-              className="mt-2 w-full rounded-lg bg-background/10 px-4 py-3 text-sm text-background outline-none ring-1 ring-background/20 focus:ring-accent"
+              className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus:border-foreground/40"
             />
           </label>
           <label className="block text-sm">
@@ -69,21 +105,24 @@ export function ContactSection() {
             <input
               name="shootDate"
               type="date"
-              className="mt-2 w-full rounded-lg bg-background/10 px-4 py-3 text-sm text-background outline-none ring-1 ring-background/20 focus:ring-accent [color-scheme:dark]"
+              className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus:border-foreground/40"
             />
           </label>
           <label className="block text-sm">
             Which coverage option suits you best?
             <select
               name="coverage"
-              className="mt-2 w-full rounded-lg bg-background/10 px-4 py-3 text-sm text-background outline-none ring-1 ring-background/20 focus:ring-accent"
+              className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus:border-foreground/40"
               defaultValue=""
             >
               <option value="" disabled>
                 Select an option
               </option>
-              <option value="classic">Classic - €700</option>
-              <option value="grand">Grand - €1,200</option>
+              {packages.map((pkg) => (
+                <option key={pkg.name} value={pkg.name.toLowerCase()}>
+                  {pkg.name} - {pkg.price}
+                </option>
+              ))}
               <option value="not-sure">Not sure yet</option>
             </select>
           </label>
@@ -92,7 +131,7 @@ export function ContactSection() {
             <textarea
               name="specialRequests"
               rows={2}
-              className="mt-2 w-full rounded-lg bg-background/10 px-4 py-3 text-sm text-background outline-none ring-1 ring-background/20 focus:ring-accent"
+              className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus:border-foreground/40"
             />
           </label>
           <label className="block text-sm">
@@ -101,23 +140,35 @@ export function ContactSection() {
               name="message"
               rows={3}
               required
-              className="mt-2 w-full rounded-lg bg-background/10 px-4 py-3 text-sm text-background outline-none ring-1 ring-background/20 focus:ring-accent"
+              className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus:border-foreground/40"
             />
           </label>
-          <label className="flex items-start gap-2 text-xs text-background/70">
+          <label className="flex items-start gap-2 text-xs text-muted">
             <input type="checkbox" required className="mt-0.5" />
             I agree to the processing of my data
           </label>
           <button
             type="submit"
-            className="pill-button !bg-background !text-foreground px-5 py-2.5 text-sm"
+            disabled={status === "sending"}
+            className="pill-button px-5 py-2.5 text-sm disabled:opacity-60"
           >
-            Submit
+            {status === "sending" ? "Sending..." : "Submit"}
           </button>
-          <p className="text-xs text-background/50">
-            Form submission isn&apos;t wired up yet - connect it to Sanity
-            (inquiry document) or a form service before launch.
-          </p>
+          {status === "sent" && (
+            <p className="text-xs text-emerald-600">
+              Thank you - your message has been sent. We&apos;ll be in touch soon.
+            </p>
+          )}
+          {status === "error" && (
+            <p className="text-xs text-red-600">
+              Something went wrong sending your message - please email us
+              directly at{" "}
+              <a href={`mailto:${email}`} className="underline">
+                {email}
+              </a>
+              .
+            </p>
+          )}
         </form>
       </div>
     </section>

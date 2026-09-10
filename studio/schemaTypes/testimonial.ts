@@ -5,14 +5,10 @@ export default defineType({
   title: "Testimonial",
   type: "document",
   fields: [
-    defineField({ name: "clientName", title: "Client / business name", type: "string" }),
+    defineField({ name: "clientName", title: "Client name", type: "string" }),
+    defineField({ name: "role", title: "Role (e.g. Bride, Lake Como wedding)", type: "string" }),
+    defineField({ name: "avatar", title: "Photo", type: "image", options: { hotspot: true } }),
     defineField({ name: "quote", title: "Quote", type: "text", rows: 4 }),
-    defineField({
-      name: "relatedPortfolioItem",
-      title: "Related portfolio item",
-      type: "reference",
-      to: [{ type: "portfolioItem" }],
-    }),
     defineField({ name: "featured", title: "Featured on homepage", type: "boolean", initialValue: false }),
   ],
 });

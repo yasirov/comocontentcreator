@@ -21,11 +21,6 @@ export function organizationSchema() {
     email: siteConfig.contactEmail,
     areaServed: siteConfig.location.areaServed,
     sameAs: [siteConfig.instagram],
-    parentOrganization: {
-      "@type": "Organization",
-      name: siteConfig.parentBrand.name,
-      url: siteConfig.parentBrand.url,
-    },
     founder: siteConfig.founders.map((f) => ({
       "@type": "Person",
       name: f.name,

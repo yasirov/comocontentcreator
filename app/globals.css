@@ -24,11 +24,43 @@
     Helvetica, Arial, sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
   letter-spacing: -0.01em;
+}
+
+/* Offsets anchored sections so the sticky header never covers the heading. */
+.anchor-section {
+  scroll-margin-top: 5.5rem;
+}
+
+/* Smooth accordion expand/collapse (grid-rows trick, no JS height calc). */
+.faq-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+
+.faq-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.faq-panel > div {
+  overflow: hidden;
+}
+
+.faq-chevron {
+  transition: transform 0.3s ease;
+}
+
+.faq-chevron[data-open="true"] {
+  transform: rotate(180deg);
 }
 
 .pill-button {

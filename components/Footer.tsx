@@ -38,19 +38,8 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="hover:text-foreground"
               >
-                Instagram | {siteConfig.name}
+                {siteConfig.instagramHandle}
               </a>
-              {siteConfig.founders.map((founder) => (
-                <a
-                  key={founder.name}
-                  href={founder.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-foreground"
-                >
-                  Instagram | {founder.name.split(" ")[0]}
-                </a>
-              ))}
             </div>
           </div>
           <div>
@@ -71,14 +60,8 @@ export function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-14 flex flex-col gap-2 border-t border-border pt-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-14 border-t border-border pt-6 text-xs text-muted">
           <p>© {new Date().getFullYear()} All rights reserved</p>
-          <p>
-            A {siteConfig.parentBrand.name} studio ·{" "}
-            <a href={siteConfig.parentBrand.url} className="hover:text-foreground">
-              {siteConfig.parentBrand.url.replace("https://", "")}
-            </a>
-          </p>
         </div>
       </div>
     </footer>

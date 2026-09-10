@@ -1,23 +1,36 @@
+import { draftMode } from "next/headers";
+import Image from "next/image";
 import { SectionHeading } from "@/components/SectionHeading";
 import { PillButton } from "@/components/PillButton";
 import { PricingCard } from "@/components/PricingCard";
 import { TestimonialCard } from "@/components/TestimonialCard";
 import { VideoRow } from "@/components/VideoRow";
 import { ContactSection } from "@/components/ContactSection";
+import { FaqItem } from "@/components/FaqItem";
+import { RichText } from "@/components/RichText";
 import { JsonLd } from "@/components/JsonLd";
 import { faqSchema, serviceSchema } from "@/lib/schema";
-import { faqs, pricingPackages } from "@/lib/data";
-import { getTestimonials } from "@/lib/content";
+import { getHomePage, getTestimonials } from "@/lib/content";
+import { siteConfig } from "@/lib/site-config";
+import { toPlainText } from "@/lib/portable-text";
 
 export default async function Home() {
-  const testimonials = await getTestimonials();
+  const { isEnabled: isPreview } = await draftMode();
+  const [home, testimonials] = await Promise.all([
+    getHomePage(isPreview),
+    getTestimonials(isPreview),
+  ]);
 
   return (
     <>
-      <JsonLd data={faqSchema(faqs)} />
+      <JsonLd
+        data={faqSchema(
+          home.faqs.map((f) => ({ question: f.question, answer: toPlainText(f.answer) }))
+        )}
+      />
       <JsonLd
         data={serviceSchema(
-          pricingPackages.map((p) => ({
+          home.pricingPackages.map((p) => ({
             name: `${p.name} - ${p.tagline}`,
             description: p.features.join(", "),
           }))
@@ -27,31 +40,73 @@ export default async function Home() {
       <section className="bg-surface">
         <div className="mx-auto max-w-6xl px-6 pt-16 pb-10 md:pt-24">
           <h1 className="max-w-3xl text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
-            Content creator
+            {home.heroTitle}
           </h1>
           <p className="mt-6 max-w-xl text-lg text-muted leading-relaxed">
-            Wedding content creation - the art of instant, vertical
-            storytelling.
+            {home.heroSubtitle}
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <PillButton href="/#contact">Let&apos;s Talk</PillButton>
+            <PillButton href="/#contact">{home.heroButtonLabel}</PillButton>
           </div>
         </div>
         <div className="mx-auto max-w-6xl px-6 pb-16">
-          <VideoRow />
+          <VideoRow videos={home.videos} />
         </div>
       </section>
 
-      <section id="pricing" className="mx-auto max-w-6xl px-6 py-20">
+      <section id="about" className="anchor-section mx-auto max-w-4xl px-6 py-20">
+        <SectionHeading eyebrow={home.aboutEyebrow} title={home.aboutTitle} />
+        <div className="mt-8 space-y-6 text-muted leading-relaxed">
+          <RichText value={home.aboutParagraphs} />
+          {home.founders.length > 0 && (
+            <div className="grid gap-6 sm:grid-cols-2 pt-2">
+              {home.founders.map((founder) => (
+                <div
+                  key={founder.name}
+                  className="flex items-center gap-4 rounded-3xl border border-border bg-surface p-6"
+                >
+                  {founder.photo ? (
+                    <Image
+                      src={founder.photo}
+                      alt={founder.name}
+                      width={56}
+                      height={56}
+                      className="h-14 w-14 flex-shrink-0 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div
+                      className="h-14 w-14 flex-shrink-0 rounded-full bg-border"
+                      aria-hidden
+                    />
+                  )}
+                  <div>
+                    <p className="text-lg font-semibold text-foreground">
+                      {founder.name}
+                    </p>
+                    <p className="mt-1 text-sm">{founder.role}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          <p>
+            Based in Como, Italy, and shooting across{" "}
+            {siteConfig.location.areaServed.slice(1).join(", ")} and the
+            wider lake area.
+          </p>
+        </div>
+      </section>
+
+      <section id="pricing" className="anchor-section mx-auto max-w-6xl px-6 py-20">
         <SectionHeading
-          eyebrow="Our pricing"
-          title="Flexible pricing for every stage"
+          eyebrow={home.pricingEyebrow}
+          title={home.pricingTitle}
           align="center"
-          description="Transport is included in the price for shoots taking place on Lake Como."
+          description={home.pricingNote}
         />
         <div className="mt-12 grid gap-6 sm:grid-cols-2 max-w-3xl mx-auto">
-          {pricingPackages.map((pkg) => (
-            <PricingCard key={pkg.slug} {...pkg} />
+          {home.pricingPackages.map((pkg) => (
+            <PricingCard key={pkg.name} {...pkg} />
           ))}
         </div>
       </section>
@@ -69,20 +124,14 @@ export default async function Home() {
 
       <div className="bg-surface">
         <section className="mx-auto max-w-6xl px-6 py-20">
-          <SectionHeading eyebrow="FAQs" title="Have questions?" align="center" />
+          <SectionHeading eyebrow={home.faqEyebrow} title={home.faqTitle} align="center" />
           <div className="mt-10 mx-auto max-w-2xl space-y-3">
-            {faqs.map((item) => (
-              <details
+            {home.faqs.map((item) => (
+              <FaqItem
                 key={item.question}
-                className="group rounded-2xl bg-background px-5 py-4"
-              >
-                <summary className="cursor-pointer list-none text-sm font-medium">
-                  {item.question}
-                </summary>
-                <p className="mt-2 text-sm text-muted leading-relaxed">
-                  {item.answer}
-                </p>
-              </details>
+                question={item.question}
+                answer={item.answer}
+              />
             ))}
           </div>
         </section>
@@ -90,18 +139,25 @@ export default async function Home() {
         <section className="mx-auto max-w-6xl px-6 pb-20">
           <div className="rounded-3xl bg-foreground px-8 py-14 text-center text-background md:px-14">
             <h2 className="mx-auto max-w-lg text-3xl font-semibold leading-tight md:text-4xl">
-              Ready to capture your day?
+              {home.closingTitle}
             </h2>
             <PillButton
               href="/#contact"
               className="mt-8 !bg-background !text-foreground"
             >
-              Let&apos;s Talk
+              {home.heroButtonLabel}
             </PillButton>
           </div>
         </section>
 
-        <ContactSection />
+        <ContactSection
+          heading={home.contactHeading}
+          intro={home.contactIntro}
+          phone={home.contactPhone}
+          email={home.contactEmail}
+          instagramUrl={home.instagramUrl}
+          packages={home.pricingPackages}
+        />
       </div>
     </>
   );

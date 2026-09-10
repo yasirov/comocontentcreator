@@ -1,35 +1,42 @@
 import { siteConfig } from "@/lib/site-config";
-import { pricingPackages } from "@/lib/data";
+import { getHomePage } from "@/lib/content";
+import { toPlainText } from "@/lib/portable-text";
 
-export function GET() {
+export async function GET() {
+  const home = await getHomePage();
+
   const body = `# ${siteConfig.name}
 
 > ${siteConfig.description}
 
-${siteConfig.name} is the wedding-day content-creation service of ${siteConfig.parentBrand.name} (${siteConfig.parentBrand.url}), a destination wedding videography studio based in Como, Italy. This service delivers fast, vertical, social-ready photo and video from the wedding day itself - it is separate from full wedding-day cinematography coverage.
+${siteConfig.name} is a wedding-day content-creation service based in Como, Italy, delivering fast, vertical, social-ready photo and video from the wedding day itself.
 
 ## Pricing
-${pricingPackages
+${home.pricingPackages
   .map(
     (p) =>
       `- ${p.name} (${p.tagline}), ${p.price}: ${p.features.join(", ")}`
   )
   .join("\n")}
-Transport is included in the price for shoots on Lake Como.
+${home.pricingNote}
+
+## FAQ
+${home.faqs.map((f) => `Q: ${f.question}\nA: ${toPlainText(f.answer)}`).join("\n\n")}
 
 ## Area served
 ${siteConfig.location.areaServed.join(", ")}, Italy.
 
 ## Key pages
 - Home: ${siteConfig.url}/
-- About: ${siteConfig.url}/about
+- About: ${siteConfig.url}/#about
+- Pricing: ${siteConfig.url}/#pricing
 - Journal: ${siteConfig.url}/journal
 - Contact: ${siteConfig.url}/#contact
 
 ## Contact
-Phone: ${siteConfig.contactPhone}
-Email: ${siteConfig.contactEmail}
-Instagram: ${siteConfig.instagram}
+Phone: ${home.contactPhone}
+Email: ${home.contactEmail}
+Instagram: ${home.instagramUrl}
 `;
 
   return new Response(body, {
