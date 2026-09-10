@@ -13,4 +13,22 @@ export default defineConfig({
   basePath: "/studio",
   plugins: [structureTool({ structure })],
   schema: { types: schemaTypes },
+  document: {
+    // Home Page is a singleton - keep it out of the "new document" menu
+    // and don't let anyone duplicate or delete the one copy of it.
+    newDocumentOptions: (prev, { creationContext }) => {
+      if (creationContext.type === "global") {
+        return prev.filter((template) => template.templateId !== "homePage");
+      }
+      return prev;
+    },
+    actions: (prev, { schemaType }) => {
+      if (schemaType === "homePage") {
+        return prev.filter(
+          ({ action }) => action !== "duplicate" && action !== "delete"
+        );
+      }
+      return prev;
+    },
+  },
 });

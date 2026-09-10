@@ -1,19 +1,30 @@
-export const servicesQuery = `*[_type == "service"] | order(order asc) {
-  "slug": slug.current,
-  name,
-  summary
-}`;
-
-export const portfolioItemsQuery = `*[_type == "portfolioItem"] | order(publishedAt desc) {
-  "slug": slug.current,
-  title,
-  category,
-  summary,
-  "coverImageUrl": coverImage.asset->url
+export const homePageQuery = `*[_type == "homePage"][0]{
+  heroTitle,
+  heroSubtitle,
+  heroButtonLabel,
+  aboutEyebrow,
+  aboutTitle,
+  aboutParagraphs,
+  founders,
+  pricingEyebrow,
+  pricingTitle,
+  pricingNote,
+  pricingPackages,
+  faqEyebrow,
+  faqTitle,
+  faqs,
+  closingTitle,
+  contactHeading,
+  contactIntro,
+  contactPhone,
+  contactEmail,
+  instagramUrl,
+  seo
 }`;
 
 export const testimonialsQuery = `*[_type == "testimonial" && featured == true] {
   clientName,
+  role,
   quote
 }`;
 

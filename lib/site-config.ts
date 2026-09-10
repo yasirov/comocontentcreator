@@ -23,7 +23,7 @@ export const siteConfig = {
     name: "YASIROV Films",
     url: "https://yasirov.com",
   },
-  contactEmail: "info@yasirov.com",
+  contactEmail: "comocontentcreator@gmail.com",
   contactPhone: "+39 339 355 0171",
   location: {
     city: "Como",

@@ -1,22 +1,30 @@
-// Row of 3 vertical (9:16) video placeholders, matching the format shown
-// on yasirov.com's content-creator page. Swap the placeholder tiles for
-// real <video> embeds once Anton sends footage.
+// Row of 3 vertical (9:16) reels, matching the format shown on
+// yasirov.com's content-creator page. Files live in /public/videos -
+// swap them for new footage by replacing reel-1/2/3.mp4 + .jpg.
+const reels = [
+  { src: "/videos/reel-1.mp4", poster: "/videos/reel-1.jpg" },
+  { src: "/videos/reel-2.mp4", poster: "/videos/reel-2.jpg" },
+  { src: "/videos/reel-3.mp4", poster: "/videos/reel-3.jpg" },
+];
+
 export function VideoRow() {
   return (
     <div className="grid grid-cols-3 gap-3 md:gap-4">
-      {[1, 2, 3].map((i) => (
+      {reels.map((reel) => (
         <div
-          key={i}
+          key={reel.src}
           className="relative aspect-[9/16] overflow-hidden rounded-2xl bg-foreground/90 md:rounded-3xl"
         >
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-background/90 md:h-14 md:w-14">
-              <div
-                className="ml-0.5 h-0 w-0 border-y-[6px] border-l-[10px] border-y-transparent border-l-foreground md:border-y-[8px] md:border-l-[13px]"
-                aria-hidden
-              />
-            </div>
-          </div>
+          <video
+            className="h-full w-full object-cover"
+            src={reel.src}
+            poster={reel.poster}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="none"
+          />
         </div>
       ))}
     </div>

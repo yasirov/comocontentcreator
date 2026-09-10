@@ -1,6 +1,12 @@
-// Placeholder / seed content. Once the Sanity Studio has real entries,
-// lib/content.ts pulls from there instead - these arrays are only the
-// fallback shown before that.
+// Placeholder / seed content. Once the Sanity Studio's "Home Page" document
+// has real entries, lib/content.ts pulls from there instead - everything
+// below is only the fallback shown before that (or if a field is left
+// blank in the Studio).
+
+export const aboutParagraphs = [
+  "Como Content Creator grew out of YASIROV Films, our destination wedding videography studio based on Lake Como. Couples kept asking for something in between a full wedding film and a phone video: content that felt cinematic, but was ready to post the same day.",
+  "That's what this is - a lighter, faster service focused purely on vertical, social-ready photo and video from your wedding day, run by the same team behind YASIROV Films.",
+];
 
 // Real pricing structure Anton already uses on yasirov.com's
 // content-creator pricing page.
