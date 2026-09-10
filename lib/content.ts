@@ -46,6 +46,7 @@ export type HomePage = {
   heroTitle: string;
   heroSubtitle: string;
   heroButtonLabel: string;
+  videos: string[];
   aboutEyebrow: string;
   aboutTitle: string;
   aboutParagraphs: string[];
@@ -70,6 +71,7 @@ const fallbackHomePage: HomePage = {
   heroSubtitle:
     "Wedding content creation - the art of instant, vertical storytelling.",
   heroButtonLabel: "Let's Talk",
+  videos: ["/videos/reel-1.mp4", "/videos/reel-2.mp4", "/videos/reel-3.mp4"],
   aboutEyebrow: "About",
   aboutTitle: "A local crew, a cinema background",
   aboutParagraphs: placeholderAboutParagraphs,
@@ -105,6 +107,7 @@ export async function getHomePage(preview = false): Promise<HomePage> {
       heroTitle: doc.heroTitle || fallbackHomePage.heroTitle,
       heroSubtitle: doc.heroSubtitle || fallbackHomePage.heroSubtitle,
       heroButtonLabel: doc.heroButtonLabel || fallbackHomePage.heroButtonLabel,
+      videos: doc.videos?.length ? doc.videos : fallbackHomePage.videos,
       aboutEyebrow: doc.aboutEyebrow || fallbackHomePage.aboutEyebrow,
       aboutTitle: doc.aboutTitle || fallbackHomePage.aboutTitle,
       aboutParagraphs:

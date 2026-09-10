@@ -43,7 +43,7 @@ export default async function Home() {
           </div>
         </div>
         <div className="mx-auto max-w-6xl px-6 pb-16">
-          <VideoRow />
+          <VideoRow videos={home.videos} />
         </div>
       </section>
 

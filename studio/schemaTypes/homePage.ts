@@ -39,6 +39,22 @@ export default defineType({
       group: "hero",
       initialValue: "Let's Talk",
     }),
+    defineField({
+      name: "videos",
+      title: "Reels (3 vertical video clips shown under the hero)",
+      description:
+        "Upload up to 3 short vertical (9:16) video files. They autoplay muted and loop on the homepage.",
+      type: "array",
+      group: "hero",
+      validation: (Rule) => Rule.max(3),
+      of: [
+        defineArrayMember({
+          type: "file",
+          name: "reel",
+          options: { accept: "video/mp4,video/quicktime" },
+        }),
+      ],
+    }),
 
     defineField({
       name: "aboutEyebrow",

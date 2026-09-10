@@ -4,6 +4,7 @@ export const homePageQuery = `*[_type == "homePage"][0]{
   heroTitle,
   heroSubtitle,
   heroButtonLabel,
+  "videos": videos[].asset->url,
   aboutEyebrow,
   aboutTitle,
   aboutParagraphs,
