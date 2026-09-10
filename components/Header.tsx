@@ -21,7 +21,7 @@ export function Header() {
             </Link>
           ))}
         </nav>
-        <PillButton href="/contact">Contact Us</PillButton>
+        <PillButton href="/#contact">Contact Us</PillButton>
       </div>
     </header>
   );

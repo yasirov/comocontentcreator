@@ -1,21 +1,28 @@
 import { SectionHeading } from "@/components/SectionHeading";
 import { PillButton } from "@/components/PillButton";
 import { PricingCard } from "@/components/PricingCard";
+import { TestimonialCard } from "@/components/TestimonialCard";
+import { VideoRow } from "@/components/VideoRow";
+import { ContactSection } from "@/components/ContactSection";
 import { JsonLd } from "@/components/JsonLd";
-import { faqSchema } from "@/lib/schema";
+import { faqSchema, serviceSchema } from "@/lib/schema";
 import { faqs, pricingPackages } from "@/lib/data";
-import { getServices, getPortfolioItems } from "@/lib/content";
-import { siteConfig } from "@/lib/site-config";
+import { getTestimonials } from "@/lib/content";
 
 export default async function Home() {
-  const [services, portfolioItems] = await Promise.all([
-    getServices(),
-    getPortfolioItems(),
-  ]);
+  const testimonials = await getTestimonials();
 
   return (
     <>
       <JsonLd data={faqSchema(faqs)} />
+      <JsonLd
+        data={serviceSchema(
+          pricingPackages.map((p) => ({
+            name: `${p.name} - ${p.tagline}`,
+            description: p.features.join(", "),
+          }))
+        )}
+      />
 
       <section className="bg-surface">
         <div className="mx-auto max-w-6xl px-6 pt-16 pb-10 md:pt-24">
@@ -23,84 +30,46 @@ export default async function Home() {
             Content creator
           </h1>
           <p className="mt-6 max-w-xl text-lg text-muted leading-relaxed">
-            {siteConfig.description}
+            Wedding content creation - the art of instant, vertical
+            storytelling.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <PillButton href="/contact">Let&apos;s Talk</PillButton>
-            <PillButton href="/work" variant="outline">
-              See recent work
-            </PillButton>
+            <PillButton href="/#contact">Let&apos;s Talk</PillButton>
           </div>
         </div>
         <div className="mx-auto max-w-6xl px-6 pb-16">
-          <div className="aspect-[16/9] w-full rounded-3xl bg-border/60" />
+          <VideoRow />
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-20">
+      <section id="pricing" className="mx-auto max-w-6xl px-6 py-20">
         <SectionHeading
-          eyebrow="Who we shoot for"
-          title="Built for local businesses on the lake"
-          description="One local team, on call for the businesses that make Lake Como run - hotels, restaurants, shops, and wedding vendors alike."
+          eyebrow="Our pricing"
+          title="Flexible pricing for every stage"
+          align="center"
+          description="Transport is included in the price for shoots taking place on Lake Como."
         />
-        <div className="mt-12 grid gap-6 sm:grid-cols-2">
-          {services.map((service) => (
-            <a
-              key={service.slug}
-              href={`/services#${service.slug}`}
-              className="group rounded-3xl border border-border bg-surface p-6 transition hover:border-foreground/20"
-            >
-              <h3 className="text-xl font-semibold">{service.name}</h3>
-              <p className="mt-2 text-sm text-muted leading-relaxed">
-                {service.summary}
-              </p>
-              <span className="mt-4 inline-block text-sm font-medium">
-                Learn more →
-              </span>
-            </a>
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 max-w-3xl mx-auto">
+          {pricingPackages.map((pkg) => (
+            <PricingCard key={pkg.slug} {...pkg} />
           ))}
         </div>
       </section>
 
-      <section className="bg-surface">
+      <section>
         <div className="mx-auto max-w-6xl px-6 py-20">
-          <SectionHeading
-            eyebrow="Our pricing"
-            title="Flexible pricing for every stage"
-            align="center"
-            description="Transport is included in the price for shoots taking place on Lake Como."
-          />
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 max-w-3xl mx-auto">
-            {pricingPackages.map((pkg) => (
-              <PricingCard key={pkg.slug} {...pkg} />
+          <SectionHeading eyebrow="Reviews" title="What clients say" align="center" />
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
+            {testimonials.map((t) => (
+              <TestimonialCard key={t.name + t.quote.slice(0, 10)} {...t} />
             ))}
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-20">
-        <SectionHeading eyebrow="Recent work" title="A few recent shoots" />
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {portfolioItems.slice(0, 3).map((item) => (
-            <div key={item.slug} className="rounded-3xl border border-border p-6">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted">
-                {item.category}
-              </p>
-              <h3 className="mt-2 text-lg font-semibold">{item.title}</h3>
-              <p className="mt-2 text-sm text-muted leading-relaxed">
-                {item.summary}
-              </p>
-            </div>
-          ))}
-        </div>
-        <PillButton href="/work" variant="outline" className="mt-10">
-          View all work
-        </PillButton>
-      </section>
-
-      <section className="bg-surface">
-        <div className="mx-auto max-w-6xl px-6 py-20">
-          <SectionHeading eyebrow="FAQ" title="Have questions?" align="center" />
+      <div className="bg-surface">
+        <section className="mx-auto max-w-6xl px-6 py-20">
+          <SectionHeading eyebrow="FAQs" title="Have questions?" align="center" />
           <div className="mt-10 mx-auto max-w-2xl space-y-3">
             {faqs.map((item) => (
               <details
@@ -116,22 +85,24 @@ export default async function Home() {
               </details>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-20">
-        <div className="relative overflow-hidden rounded-3xl bg-foreground px-8 py-14 text-background md:px-14">
-          <h2 className="max-w-lg text-3xl font-semibold leading-tight md:text-4xl">
-            Continue your story with YASIROV Films
-          </h2>
-          <PillButton
-            href={siteConfig.parentBrand.url}
-            className="mt-8 !bg-background !text-foreground"
-          >
-            YASIROV Films
-          </PillButton>
-        </div>
-      </section>
+        <section className="mx-auto max-w-6xl px-6 pb-20">
+          <div className="rounded-3xl bg-foreground px-8 py-14 text-center text-background md:px-14">
+            <h2 className="mx-auto max-w-lg text-3xl font-semibold leading-tight md:text-4xl">
+              Ready to capture your day?
+            </h2>
+            <PillButton
+              href="/#contact"
+              className="mt-8 !bg-background !text-foreground"
+            >
+              Let&apos;s Talk
+            </PillButton>
+          </div>
+        </section>
+
+        <ContactSection />
+      </div>
     </>
   );
 }

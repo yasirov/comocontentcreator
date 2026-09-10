@@ -5,7 +5,7 @@ import { siteConfig } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Como Content Creator is the local content arm of YASIROV Films, shooting photo and video for businesses around Lake Como.",
+    "Como Content Creator is the wedding-day content service of YASIROV Films, capturing fast, vertical, social-ready footage on Lake Como.",
 };
 
 export default function AboutPage() {
@@ -15,16 +15,15 @@ export default function AboutPage() {
       <div className="mt-10 space-y-6 text-muted leading-relaxed">
         <p>
           Como Content Creator grew out of {siteConfig.parentBrand.name}, our
-          destination wedding videography studio based on Lake Como. After
-          years of shooting weddings for couples from around the world, local
-          hotels, restaurants, and vendors kept asking for the same thing:
-          content that looked as good as what we made for weddings, but built
-          for their everyday marketing.
+          destination wedding videography studio based on Lake Como. Couples
+          kept asking for something in between a full wedding film and a
+          phone video: content that felt cinematic, but was ready to post the
+          same day.
         </p>
         <p>
-          That&apos;s what this is - a faster, lighter service focused purely
-          on photo and video content for local businesses, run by the same
-          team behind {siteConfig.parentBrand.name}.
+          That&apos;s what this is - a lighter, faster service focused purely
+          on vertical, social-ready photo and video from your wedding day,
+          run by the same team behind {siteConfig.parentBrand.name}.
         </p>
         <div className="grid gap-6 sm:grid-cols-2 pt-4">
           {siteConfig.founders.map((founder) => (
@@ -40,7 +39,7 @@ export default function AboutPage() {
           ))}
         </div>
         <p>
-          Based in Como, Italy, and shooting across {" "}
+          Based in Como, Italy, and shooting across{" "}
           {siteConfig.location.areaServed.slice(1).join(", ")} and the wider
           lake area.
         </p>
