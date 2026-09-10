@@ -1,0 +1,5 @@
+{
+  "extends": "sanity/tsconfig",
+  "include": ["./**/*"],
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "comocontentcreator",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  }
+  // Once ready to deploy: `wrangler login`, then add a `routes` entry
+  // pointing at comocontentcreator.com. Per the roadmap, this project
+  // deploys straight to its real domain (unlike thelakeproposal.com and
+  // yasirov.com, which go live on a temp domain first) - but only once
+  // the content/pages are actually ready to be seen publicly.
+}
