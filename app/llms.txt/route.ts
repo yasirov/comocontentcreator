@@ -1,5 +1,5 @@
 import { siteConfig } from "@/lib/site-config";
-import { services } from "@/lib/data";
+import { services, pricingPackages } from "@/lib/data";
 
 export function GET() {
   const body = `# ${siteConfig.name}
@@ -10,6 +10,15 @@ ${siteConfig.name} is the local content-creation service of ${siteConfig.parentB
 
 ## Services
 ${services.map((s) => `- ${s.name}: ${s.summary}`).join("\n")}
+
+## Pricing
+${pricingPackages
+  .map(
+    (p) =>
+      `- ${p.name} (${p.tagline}), ${p.price}: ${p.features.join(", ")}`
+  )
+  .join("\n")}
+Transport is included in the price for shoots on Lake Como.
 
 ## Area served
 ${siteConfig.location.areaServed.join(", ")}, Italy.
@@ -23,6 +32,7 @@ ${siteConfig.location.areaServed.join(", ")}, Italy.
 - Contact: ${siteConfig.url}/contact
 
 ## Contact
+Phone: ${siteConfig.contactPhone}
 Email: ${siteConfig.contactEmail}
 Instagram: ${siteConfig.instagram}
 `;

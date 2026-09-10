@@ -12,10 +12,13 @@ export function organizationSchema() {
     priceRange: "€€",
     address: {
       "@type": "PostalAddress",
+      streetAddress: siteConfig.location.address,
       addressLocality: siteConfig.location.city,
       addressRegion: siteConfig.location.region,
       addressCountry: "IT",
     },
+    telephone: siteConfig.contactPhone,
+    email: siteConfig.contactEmail,
     areaServed: siteConfig.location.areaServed,
     sameAs: [siteConfig.instagram],
     parentOrganization: {
