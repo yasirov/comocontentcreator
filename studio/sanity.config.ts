@@ -1,8 +1,14 @@
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
+import { presentationTool } from "sanity/presentation";
 import { schemaTypes } from "./schemaTypes";
 import { structure } from "./structure";
 import { apiVersion, dataset, projectId } from "./env";
+
+// The live site's current URL. Update this once comocontentcreator.com is
+// connected to the Cloudflare Worker - the Presentation tool's live
+// preview loads whatever origin is set here.
+const SITE_URL = "https://comocontentcreator.elezoria-preview.workers.dev";
 
 export default defineConfig({
   name: "comocontentcreator",
@@ -11,7 +17,18 @@ export default defineConfig({
   dataset,
   apiVersion,
   basePath: "/studio",
-  plugins: [structureTool({ structure })],
+  plugins: [
+    structureTool({ structure }),
+    presentationTool({
+      previewUrl: {
+        origin: SITE_URL,
+        preview: "/",
+        previewMode: {
+          enable: "/api/draft-mode/enable",
+        },
+      },
+    }),
+  ],
   schema: { types: schemaTypes },
   document: {
     // Home Page is a singleton - keep it out of the "new document" menu

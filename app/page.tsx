@@ -1,3 +1,4 @@
+import { draftMode } from "next/headers";
 import { SectionHeading } from "@/components/SectionHeading";
 import { PillButton } from "@/components/PillButton";
 import { PricingCard } from "@/components/PricingCard";
@@ -11,9 +12,10 @@ import { getHomePage, getTestimonials } from "@/lib/content";
 import { siteConfig } from "@/lib/site-config";
 
 export default async function Home() {
+  const { isEnabled: isPreview } = await draftMode();
   const [home, testimonials] = await Promise.all([
-    getHomePage(),
-    getTestimonials(),
+    getHomePage(isPreview),
+    getTestimonials(isPreview),
   ]);
 
   return (

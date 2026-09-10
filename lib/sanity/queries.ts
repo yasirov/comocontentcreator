@@ -1,4 +1,6 @@
 export const homePageQuery = `*[_type == "homePage"][0]{
+  _id,
+  _type,
   heroTitle,
   heroSubtitle,
   heroButtonLabel,
@@ -23,6 +25,8 @@ export const homePageQuery = `*[_type == "homePage"][0]{
 }`;
 
 export const testimonialsQuery = `*[_type == "testimonial" && featured == true] {
+  _id,
+  _type,
   clientName,
   role,
   quote

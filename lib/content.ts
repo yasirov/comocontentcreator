@@ -1,4 +1,4 @@
-import { sanityClient } from "@/lib/sanity/client";
+import { getSanityClient } from "@/lib/sanity/client";
 import {
   homePageQuery,
   testimonialsQuery,
@@ -95,9 +95,9 @@ const fallbackHomePage: HomePage = {
   instagramUrl: siteConfig.instagram,
 };
 
-export async function getHomePage(): Promise<HomePage> {
+export async function getHomePage(preview = false): Promise<HomePage> {
   try {
-    const doc = await sanityClient.fetch<Partial<HomePage> | null>(
+    const doc = await getSanityClient(preview).fetch<Partial<HomePage> | null>(
       homePageQuery
     );
     if (!doc) return fallbackHomePage;
@@ -134,13 +134,13 @@ export async function getHomePage(): Promise<HomePage> {
   }
 }
 
-export async function getTestimonials(): Promise<Testimonial[]> {
+export async function getTestimonials(preview = false): Promise<Testimonial[]> {
   try {
     const items: {
       clientName: string;
       role?: string;
       quote: string;
-    }[] = await sanityClient.fetch(testimonialsQuery);
+    }[] = await getSanityClient(preview).fetch(testimonialsQuery);
     if (!items?.length) return placeholderTestimonials;
     return items.map((t) => ({ quote: t.quote, name: t.clientName, role: t.role }));
   } catch {
@@ -148,9 +148,9 @@ export async function getTestimonials(): Promise<Testimonial[]> {
   }
 }
 
-export async function getArticles(): Promise<Article[]> {
+export async function getArticles(preview = false): Promise<Article[]> {
   try {
-    return await sanityClient.fetch(articlesQuery);
+    return await getSanityClient(preview).fetch(articlesQuery);
   } catch {
     return [];
   }
