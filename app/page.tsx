@@ -2,10 +2,16 @@ import Link from "next/link";
 import { SectionHeading } from "@/components/SectionHeading";
 import { JsonLd } from "@/components/JsonLd";
 import { faqSchema } from "@/lib/schema";
-import { services, portfolioItems, faqs } from "@/lib/data";
+import { faqs } from "@/lib/data";
+import { getServices, getPortfolioItems } from "@/lib/content";
 import { siteConfig } from "@/lib/site-config";
 
-export default function Home() {
+export default async function Home() {
+  const [services, portfolioItems] = await Promise.all([
+    getServices(),
+    getPortfolioItems(),
+  ]);
+
   return (
     <>
       <JsonLd data={faqSchema(faqs)} />
@@ -67,7 +73,7 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-6 py-20">
           <SectionHeading eyebrow="Recent work" title="A few recent shoots" />
           <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {portfolioItems.map((item) => (
+            {portfolioItems.slice(0, 3).map((item) => (
               <div
                 key={item.slug}
                 className="rounded-2xl border border-border p-6"

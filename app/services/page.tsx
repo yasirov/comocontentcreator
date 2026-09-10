@@ -3,7 +3,7 @@ import Link from "next/link";
 import { SectionHeading } from "@/components/SectionHeading";
 import { JsonLd } from "@/components/JsonLd";
 import { serviceSchema } from "@/lib/schema";
-import { services } from "@/lib/data";
+import { getServices } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -11,7 +11,9 @@ export const metadata: Metadata = {
     "Photo and video content packages for hotels, restaurants, wedding vendors, and brands on Lake Como.",
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const services = await getServices();
+
   return (
     <>
       <JsonLd
