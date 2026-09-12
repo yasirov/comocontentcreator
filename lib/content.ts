@@ -6,13 +6,17 @@ import {
   articleBySlugQuery,
 } from "@/lib/sanity/queries";
 import {
-  testimonials as placeholderTestimonials,
   pricingPackages as placeholderPricingPackages,
   faqsPlain,
   aboutParagraphsPlain,
 } from "@/lib/data";
 import { siteConfig } from "@/lib/site-config";
-import { toBlocks, toBlock, type PortableTextBlock } from "@/lib/portable-text";
+import {
+  toBlocks,
+  toBlock,
+  normalizeRichText,
+  type PortableTextBlock,
+} from "@/lib/portable-text";
 
 // Fetches live content from Sanity, falling back field-by-field to the
 // placeholder data in lib/data.ts / lib/site-config.ts whenever the "Home
@@ -122,10 +126,10 @@ export async function getHomePage(preview = false): Promise<HomePage> {
       videos: doc.videos?.length ? doc.videos : fallbackHomePage.videos,
       aboutEyebrow: doc.aboutEyebrow || fallbackHomePage.aboutEyebrow,
       aboutTitle: doc.aboutTitle || fallbackHomePage.aboutTitle,
-      aboutParagraphs:
-        doc.aboutParagraphs?.length
-          ? doc.aboutParagraphs
-          : fallbackHomePage.aboutParagraphs,
+      aboutParagraphs: normalizeRichText(
+        doc.aboutParagraphs,
+        fallbackHomePage.aboutParagraphs
+      ),
       founders: doc.founders?.length ? doc.founders : fallbackHomePage.founders,
       pricingEyebrow: doc.pricingEyebrow || fallbackHomePage.pricingEyebrow,
       pricingTitle: doc.pricingTitle || fallbackHomePage.pricingTitle,
@@ -136,7 +140,12 @@ export async function getHomePage(preview = false): Promise<HomePage> {
           : fallbackHomePage.pricingPackages,
       faqEyebrow: doc.faqEyebrow || fallbackHomePage.faqEyebrow,
       faqTitle: doc.faqTitle || fallbackHomePage.faqTitle,
-      faqs: doc.faqs?.length ? doc.faqs : fallbackHomePage.faqs,
+      faqs: doc.faqs?.length
+        ? doc.faqs.map((item) => ({
+            question: item.question,
+            answer: normalizeRichText(item.answer),
+          }))
+        : fallbackHomePage.faqs,
       closingTitle: doc.closingTitle || fallbackHomePage.closingTitle,
       contactHeading: doc.contactHeading || fallbackHomePage.contactHeading,
       contactIntro: doc.contactIntro || fallbackHomePage.contactIntro,
@@ -157,7 +166,8 @@ export async function getTestimonials(preview = false): Promise<Testimonial[]> {
       quote: string;
       avatar?: string;
     }[] = await getSanityClient(preview).fetch(testimonialsQuery);
-    if (!items?.length) return placeholderTestimonials;
+    // No invented reviews: an empty list hides the section entirely.
+    if (!items?.length) return [];
     return items.map((t) => ({
       quote: t.quote,
       name: t.clientName,
@@ -165,7 +175,7 @@ export async function getTestimonials(preview = false): Promise<Testimonial[]> {
       avatar: t.avatar,
     }));
   } catch {
-    return placeholderTestimonials;
+    return [];
   }
 }
 

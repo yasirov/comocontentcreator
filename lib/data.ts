@@ -44,7 +44,10 @@ export const pricingPackages = [
   },
 ];
 
-// Placeholder quotes - swap for real reviews once Anton sends them.
+// Placeholder quotes, kept only as a shape reference. They are NOT shown on
+// the site: lib/content.ts returns an empty list when Sanity has no
+// testimonials, and the Reviews section hides itself rather than publishing
+// invented reviews. Add real ones in Studio and the section appears.
 export const testimonials = [
   {
     quote:

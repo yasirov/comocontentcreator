@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
-import type { PortableTextBlock } from "@/lib/portable-text";
+import { normalizeRichText, type PortableTextBlock } from "@/lib/portable-text";
 
 const components: PortableTextComponents = {
   types: {
@@ -48,8 +48,11 @@ const components: PortableTextComponents = {
 export function RichText({
   value,
 }: {
-  value: PortableTextBlock[] | Record<string, unknown>[];
+  value: PortableTextBlock[] | Record<string, unknown>[] | string | undefined;
 }) {
-  if (!value?.length) return null;
-  return <PortableText value={value as PortableTextBlock[]} components={components} />;
+  // Normalizes first so a field still holding the old plain-text shape (or
+  // anything unexpected) renders as paragraphs instead of an error block.
+  const blocks = normalizeRichText(value);
+  if (!blocks.length) return null;
+  return <PortableText value={blocks} components={components} />;
 }

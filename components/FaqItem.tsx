@@ -19,7 +19,7 @@ export function FaqItem({
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full items-center justify-between gap-4 text-left text-sm font-medium"
+        className="flex min-h-11 w-full items-center justify-between gap-4 py-1 text-left text-sm font-medium"
       >
         {question}
         <svg

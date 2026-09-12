@@ -12,6 +12,20 @@ import { writeClient } from "@/lib/sanity/client";
 // Sanity. Without RESEND_API_KEY the request still saves to Sanity (if
 // that token is set) and returns success; without either, it returns an
 // error so the form shows a "please email us directly" fallback.
+//
+// Two optional secrets control the addresses, because Resend refuses to
+// send anywhere except the account owner's own address until a domain is
+// verified there:
+//
+//   CONTACT_EMAIL_TO  - who receives the notification. Set this to the
+//                       Resend account's own email until the domain is
+//                       verified; afterwards delete it and mail goes to
+//                       the address shown on the site.
+//   RESEND_FROM       - the From header. Defaults to Resend's shared
+//                       onboarding@resend.dev sender; once
+//                       comocontentcreator.com is verified in Resend, set
+//                       it to something like
+//                       "Como Content Creator <hello@comocontentcreator.com>".
 
 type ContactPayload = {
   names?: string;
@@ -59,15 +73,23 @@ export async function POST(request: Request) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: `${siteConfig.name} website <onboarding@resend.dev>`,
-          to: [siteConfig.contactEmail],
+          from:
+            process.env.RESEND_FROM ||
+            `${siteConfig.name} website <onboarding@resend.dev>`,
+          to: [process.env.CONTACT_EMAIL_TO || siteConfig.contactEmail],
           reply_to: email,
           subject: `New inquiry from ${names}`,
           text: textBody,
         }),
       });
       emailSent = res.ok;
-    } catch {
+      if (!res.ok) {
+        // Surfaced in `npx wrangler tail` - Resend's rejection reason
+        // (unverified domain, wrong recipient, bad key) is the usual cause.
+        console.error("Resend rejected the message:", res.status, await res.text());
+      }
+    } catch (err) {
+      console.error("Resend request failed:", err);
       emailSent = false;
     }
   }

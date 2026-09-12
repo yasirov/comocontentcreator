@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { draftMode } from "next/headers";
 import { RichText } from "@/components/RichText";
+import { PillButton } from "@/components/PillButton";
 import { getArticle } from "@/lib/content";
 import { toPlainText } from "@/lib/portable-text";
 
@@ -90,12 +91,35 @@ export default async function ArticlePage({
         </div>
       )}
 
-      <div className="mt-10 text-lg leading-relaxed text-muted">
+      {/* Near-black rather than the muted grey used for short intros: a
+          full article is a long read and needs the stronger contrast. */}
+      <div className="mt-10 text-lg leading-relaxed text-foreground/85 [&_p]:mb-6">
         {article.body?.length ? (
           <RichText value={article.body} />
         ) : (
           <p>{toPlainText(article.excerpt)}</p>
         )}
+      </div>
+
+      <div className="mt-14 rounded-3xl bg-surface px-6 py-10 text-center sm:px-10">
+        <h2 className="mx-auto max-w-sm text-2xl font-semibold leading-tight">
+          Planning a wedding on Lake Como?
+        </h2>
+        <p className="mx-auto mt-3 max-w-md text-muted leading-relaxed">
+          Tell us your date and we&apos;ll check availability.
+        </p>
+        <PillButton href="/#contact" className="mt-6 px-5 py-2.5 text-sm">
+          Let&apos;s Talk
+        </PillButton>
+      </div>
+
+      <div className="mt-10">
+        <Link
+          href="/journal"
+          className="text-sm text-muted hover:text-foreground"
+        >
+          ← All articles
+        </Link>
       </div>
     </article>
   );

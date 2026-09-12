@@ -14,15 +14,15 @@ export function Footer() {
           </div>
           <div>
             <p className="text-sm font-medium">Navigation</p>
-            <div className="mt-3 flex flex-col gap-2 text-sm text-muted">
-              <Link href="/" className="hover:text-foreground">
+            <div className="mt-2 flex flex-col text-sm text-muted">
+              <Link href="/" className="inline-block py-1.5 hover:text-foreground">
                 Home
               </Link>
               {siteConfig.nav.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="hover:text-foreground"
+                  className="inline-block py-1.5 hover:text-foreground"
                 >
                   {item.label}
                 </Link>
@@ -31,12 +31,12 @@ export function Footer() {
           </div>
           <div>
             <p className="text-sm font-medium">Follow Us</p>
-            <div className="mt-3 flex flex-col gap-2 text-sm text-muted">
+            <div className="mt-2 flex flex-col text-sm text-muted">
               <a
                 href={siteConfig.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-foreground"
+                className="inline-block py-1.5 hover:text-foreground"
               >
                 {siteConfig.instagramHandle}
               </a>
@@ -44,16 +44,16 @@ export function Footer() {
           </div>
           <div>
             <p className="text-sm font-medium">Contact Us</p>
-            <div className="mt-3 flex flex-col gap-2 text-sm text-muted">
+            <div className="mt-2 flex flex-col text-sm text-muted">
               <a
                 href={`tel:${siteConfig.contactPhone.replace(/\s/g, "")}`}
-                className="hover:text-foreground"
+                className="inline-block py-1.5 hover:text-foreground"
               >
                 {siteConfig.contactPhone}
               </a>
               <a
                 href={`mailto:${siteConfig.contactEmail}`}
-                className="hover:text-foreground"
+                className="inline-block py-1.5 hover:text-foreground"
               >
                 {siteConfig.contactEmail}
               </a>

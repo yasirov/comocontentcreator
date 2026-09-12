@@ -46,13 +46,13 @@ export function ContactSection({
     <section id="contact" className="anchor-section mx-auto max-w-6xl px-6 py-20">
       <div className="grid gap-12 md:grid-cols-2">
         <div>
-          <h2 className="text-6xl font-semibold tracking-tight">{heading}</h2>
+          <h2 className="text-5xl font-semibold tracking-tight md:text-6xl">{heading}</h2>
           <p className="mt-4 max-w-sm text-muted leading-relaxed">{intro}</p>
-          <div className="mt-10 space-y-2 text-sm">
+          <div className="mt-10 space-y-1 text-sm">
             <p>
               <a
                 href={`tel:${phone.replace(/\s/g, "")}`}
-                className="font-medium hover:text-muted"
+                className="inline-block py-1.5 font-medium hover:text-muted"
               >
                 {phone}
               </a>
@@ -60,7 +60,7 @@ export function ContactSection({
             <p>
               <a
                 href={`mailto:${email}`}
-                className="font-medium hover:text-muted"
+                className="inline-block py-1.5 font-medium hover:text-muted"
               >
                 {email}
               </a>
@@ -70,7 +70,7 @@ export function ContactSection({
                 href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium hover:text-muted"
+                className="inline-block py-1.5 font-medium hover:text-muted"
               >
                 {siteConfig.instagramHandle}
               </a>
@@ -88,7 +88,9 @@ export function ContactSection({
               name="names"
               type="text"
               required
-              className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus:border-foreground/40"
+              autoComplete="name"
+              placeholder="Anna & Marco"
+              className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-base text-foreground outline-none focus:border-foreground/40 sm:text-sm"
             />
           </label>
           <label className="block text-sm">
@@ -97,7 +99,10 @@ export function ContactSection({
               name="email"
               type="email"
               required
-              className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus:border-foreground/40"
+              autoComplete="email"
+              inputMode="email"
+              placeholder="you@email.com"
+              className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-base text-foreground outline-none focus:border-foreground/40 sm:text-sm"
             />
           </label>
           <label className="block text-sm">
@@ -105,14 +110,14 @@ export function ContactSection({
             <input
               name="shootDate"
               type="date"
-              className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus:border-foreground/40"
+              className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-base text-foreground outline-none focus:border-foreground/40 sm:text-sm"
             />
           </label>
           <label className="block text-sm">
             Which coverage option suits you best?
             <select
               name="coverage"
-              className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus:border-foreground/40"
+              className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-base text-foreground outline-none focus:border-foreground/40 sm:text-sm"
               defaultValue=""
             >
               <option value="" disabled>
@@ -131,7 +136,7 @@ export function ContactSection({
             <textarea
               name="specialRequests"
               rows={2}
-              className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus:border-foreground/40"
+              className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-base text-foreground outline-none focus:border-foreground/40 sm:text-sm"
             />
           </label>
           <label className="block text-sm">
@@ -140,12 +145,17 @@ export function ContactSection({
               name="message"
               rows={3}
               required
-              className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus:border-foreground/40"
+              className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-base text-foreground outline-none focus:border-foreground/40 sm:text-sm"
             />
           </label>
-          <label className="flex items-start gap-2 text-xs text-muted">
-            <input type="checkbox" required className="mt-0.5" />
-            I agree to the processing of my data
+          <label className="flex items-start gap-3 py-2 text-sm text-muted">
+            <input
+              type="checkbox"
+              name="consent"
+              required
+              className="mt-0.5 h-5 w-5 flex-shrink-0 accent-foreground"
+            />
+            <span>I agree to the processing of my data</span>
           </label>
           <button
             type="submit"
@@ -154,13 +164,14 @@ export function ContactSection({
           >
             {status === "sending" ? "Sending..." : "Submit"}
           </button>
+          <div aria-live="polite">
           {status === "sent" && (
-            <p className="text-xs text-emerald-600">
+            <p className="text-sm font-medium text-emerald-700">
               Thank you - your message has been sent. We&apos;ll be in touch soon.
             </p>
           )}
           {status === "error" && (
-            <p className="text-xs text-red-600">
+            <p className="text-sm text-red-700">
               Something went wrong sending your message - please email us
               directly at{" "}
               <a href={`mailto:${email}`} className="underline">
@@ -169,6 +180,7 @@ export function ContactSection({
               .
             </p>
           )}
+          </div>
         </form>
       </div>
     </section>

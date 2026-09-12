@@ -14,6 +14,12 @@ import { getHomePage, getTestimonials } from "@/lib/content";
 import { siteConfig } from "@/lib/site-config";
 import { toPlainText } from "@/lib/portable-text";
 
+// "https://www.instagram.com/sabina_yasirova" -> "@sabina_yasirova"
+function instagramHandle(url: string) {
+  const slug = url.replace(/\/+$/, "").split("/").pop();
+  return slug ? `@${slug}` : "Instagram";
+}
+
 export default async function Home() {
   const { isEnabled: isPreview } = await draftMode();
   const [home, testimonials] = await Promise.all([
@@ -59,7 +65,11 @@ export default async function Home() {
         <div className="mt-8 space-y-6 text-muted leading-relaxed">
           <RichText value={home.aboutParagraphs} />
           {home.founders.length > 0 && (
-            <div className="grid gap-6 sm:grid-cols-2 pt-2">
+            <div
+              className={`grid gap-6 pt-2 ${
+                home.founders.length > 1 ? "sm:grid-cols-2" : "max-w-md"
+              }`}
+            >
               {home.founders.map((founder) => (
                 <div
                   key={founder.name}
@@ -84,6 +94,16 @@ export default async function Home() {
                       {founder.name}
                     </p>
                     <p className="mt-1 text-sm">{founder.role}</p>
+                    {founder.instagram && (
+                      <a
+                        href={founder.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-1 inline-block py-1 text-sm font-medium text-foreground hover:text-muted"
+                      >
+                        {instagramHandle(founder.instagram)}
+                      </a>
+                    )}
                   </div>
                 </div>
               ))}
@@ -111,16 +131,18 @@ export default async function Home() {
         </div>
       </section>
 
-      <section>
-        <div className="mx-auto max-w-6xl px-6 py-20">
-          <SectionHeading eyebrow="Reviews" title="What clients say" align="center" />
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {testimonials.map((t) => (
-              <TestimonialCard key={t.name + t.quote.slice(0, 10)} {...t} />
-            ))}
+      {testimonials.length > 0 && (
+        <section>
+          <div className="mx-auto max-w-6xl px-6 py-20">
+            <SectionHeading eyebrow="Reviews" title="What clients say" align="center" />
+            <div className="mt-12 grid gap-6 md:grid-cols-3">
+              {testimonials.map((t) => (
+                <TestimonialCard key={t.name + t.quote.slice(0, 10)} {...t} />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <div className="bg-surface">
         <section className="mx-auto max-w-6xl px-6 py-20">
