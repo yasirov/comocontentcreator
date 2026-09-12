@@ -28,6 +28,16 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Closing CTA section - a soft, layered dark gradient (Apple product-page
+   style) instead of a flat fill: a faint warm glow top-left, a cooler one
+   bottom-right, over a charcoal-to-black base. */
+.cta-gradient {
+  background:
+    radial-gradient(120% 140% at 12% -10%, rgba(255, 208, 0, 0.16), transparent 55%),
+    radial-gradient(110% 130% at 100% 115%, rgba(255, 255, 255, 0.1), transparent 55%),
+    linear-gradient(165deg, #1c1c1e 0%, #101012 45%, #000000 100%);
+}
+
 /* Visible keyboard focus everywhere. Inputs suppress the default outline in
    favour of a border change, which is too subtle on its own, so every
    interactive element gets this ring on keyboard focus only. */

@@ -4,7 +4,11 @@
 // instead of the original full-size file, without touching how images are
 // uploaded in the Studio.
 const AVATAR_PARAMS = "?w=160&h=160&fit=crop&auto=format&q=80";
-const FOUNDER_PHOTO_PARAMS = "?w=240&h=240&fit=crop&auto=format&q=82";
+// No forced square crop here (unlike AVATAR_PARAMS) - the same founder photo
+// is shown both as a round avatar and as a tall 4:5 portrait, so the crop
+// has to happen in the browser via object-fit, using the hotspot Sabina
+// sets in Studio. This just caps the file size.
+const FOUNDER_PHOTO_PARAMS = "?w=800&fit=max&auto=format&q=82";
 const COVER_PARAMS = "?w=1600&fit=max&auto=format&q=82";
 
 export const homePageQuery = `*[_type == "homePage"][0]{
@@ -21,7 +25,8 @@ export const homePageQuery = `*[_type == "homePage"][0]{
     name,
     role,
     instagram,
-    "photo": photo.asset->url + "${FOUNDER_PHOTO_PARAMS}"
+    "photo": photo.asset->url + "${FOUNDER_PHOTO_PARAMS}",
+    "photoHotspot": photo.hotspot
   },
   pricingEyebrow,
   pricingTitle,

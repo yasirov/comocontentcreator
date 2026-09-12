@@ -56,6 +56,10 @@ export type Founder = {
   role: string;
   instagram?: string;
   photo?: string;
+  // Sanity's image hotspot: the point (0-1, 0-1) Sabina drags to in Studio
+  // to pick what stays in frame when the photo is cropped. Lets her move
+  // the framing herself any time, without a code change.
+  photoHotspot?: { x: number; y: number };
 };
 
 export type HomePage = {

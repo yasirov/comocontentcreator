@@ -102,6 +102,8 @@ export default defineType({
               title: "Photo",
               type: "image",
               options: { hotspot: true },
+              description:
+                "Click the photo, then drag the circular crosshair to choose what stays in frame (e.g. center it on the face) - the website follows it automatically, on both the round avatar and the tall portrait.",
             }),
           ],
           preview: {

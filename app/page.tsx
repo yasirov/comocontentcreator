@@ -20,6 +20,16 @@ function instagramHandle(url: string) {
   return slug ? `@${slug}` : "Instagram";
 }
 
+// Where a founder photo is centered inside its frame. Once a photo is
+// uploaded in Sanity Studio, dragging the hotspot circle on it (Content ->
+// Home Page -> About -> Founders -> photo) moves the framing here too - no
+// code change needed. Without a Sanity photo (the placeholder shot below),
+// "top" keeps the whole head in frame instead of centering on the chest.
+function focalPosition(hotspot?: { x: number; y: number }) {
+  if (!hotspot) return undefined;
+  return `${Math.round(hotspot.x * 100)}% ${Math.round(hotspot.y * 100)}%`;
+}
+
 export default async function Home() {
   const { isEnabled: isPreview } = await draftMode();
   const [home, testimonials] = await Promise.all([
@@ -68,20 +78,24 @@ export default async function Home() {
         id="about"
         className="anchor-section mx-auto max-w-5xl px-6 py-20"
       >
-        <SectionHeading eyebrow={home.aboutEyebrow} title={home.aboutTitle} />
-
-        <div className="mt-10 grid gap-10 md:grid-cols-[1fr_300px] md:gap-14">
-          <div className="text-muted leading-relaxed">
-            <RichText value={home.aboutParagraphs} />
-            <p className="mt-6">
-              Based in Como, Italy, and shooting across{" "}
-              {siteConfig.location.areaServed.slice(1).join(", ")} and the
-              wider lake area.
-            </p>
+        <div className="grid gap-10 md:grid-cols-[1fr_300px] md:gap-14">
+          <div>
+            <SectionHeading
+              eyebrow={home.aboutEyebrow}
+              title={home.aboutTitle}
+            />
+            <div className="mt-10 text-muted leading-relaxed">
+              <RichText value={home.aboutParagraphs} />
+              <p className="mt-6">
+                Based in Como, Italy, and shooting across{" "}
+                {siteConfig.location.areaServed.slice(1).join(", ")} and the
+                wider lake area.
+              </p>
+            </div>
           </div>
 
           {lead && (
-            <figure className="md:pt-1">
+            <figure>
               <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-surface">
                 <Image
                   src={lead.photo || "/images/sabina-portrait.jpg"}
@@ -89,6 +103,11 @@ export default async function Home() {
                   fill
                   sizes="(min-width: 768px) 300px, 100vw"
                   className="object-cover"
+                  style={{
+                    objectPosition: lead.photo
+                      ? focalPosition(lead.photoHotspot) ?? "center"
+                      : "center top",
+                  }}
                   priority={false}
                 />
               </div>
@@ -126,6 +145,9 @@ export default async function Home() {
                     width={56}
                     height={56}
                     className="h-14 w-14 flex-shrink-0 rounded-full object-cover"
+                    style={{
+                      objectPosition: focalPosition(founder.photoHotspot) ?? "center",
+                    }}
                   />
                 ) : (
                   <div
@@ -187,7 +209,7 @@ export default async function Home() {
         </section>
 
         <section className="mx-auto max-w-6xl px-6 pb-20">
-          <div className="rounded-3xl bg-foreground px-8 py-14 text-center text-background md:px-14">
+          <div className="cta-gradient rounded-3xl px-8 py-14 text-center text-background md:px-14">
             <h2 className="mx-auto max-w-lg text-3xl font-semibold leading-tight md:text-4xl">
               {home.closingTitle}
             </h2>
