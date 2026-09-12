@@ -8,7 +8,7 @@ import { apiVersion, dataset, projectId } from "./env";
 // The live site's current URL. Update this once comocontentcreator.com is
 // connected to the Cloudflare Worker - the Presentation tool's live
 // preview loads whatever origin is set here.
-const SITE_URL = "https://comocontentcreator.elezoria-preview.workers.dev";
+const SITE_URL = "https://comocontentcreator.com";
 
 export default defineConfig({
   name: "comocontentcreator",

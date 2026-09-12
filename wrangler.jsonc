@@ -16,8 +16,10 @@
   // Cloudflare account (moved off Squarespace/Google nameservers on
   // 2026-09-12). With "custom_domain": true, `npm run cf:deploy` creates
   // the DNS records and the HTTPS certificate itself - no manual A/CNAME
-  // record needed. The comocontentcreator.elezoria-preview.workers.dev URL
-  // keeps working alongside it, which is what Sanity's live preview uses.
+  // record needed. Note that attaching a custom domain turns the
+  // *.workers.dev URL off by default, so Sanity's live preview now points
+  // at comocontentcreator.com (studio/sanity.config.ts). Keeping only one
+  // public hostname also avoids duplicate content in search results.
   "routes": [
     { "pattern": "comocontentcreator.com", "custom_domain": true },
     { "pattern": "www.comocontentcreator.com", "custom_domain": true }
