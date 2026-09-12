@@ -1,17 +1,18 @@
 import type { StructureResolver } from "sanity/structure";
 
 // Groups content the way a non-technical editor will actually use it -
-// matches the pattern used in the Elezoria studio.
+// matches the pattern used in the Elezoria studio. "Home Page" is a
+// singleton: one document holds every editable block of the one-page site.
 export const structure: StructureResolver = (S) =>
   S.list()
     .title("Content")
     .items([
-      S.listItem().title("Portfolio Items").child(
-        S.documentTypeList("portfolioItem").title("Portfolio Items")
-      ),
-      S.listItem().title("Services").child(
-        S.documentTypeList("service").title("Services")
-      ),
+      S.listItem()
+        .title("Home Page")
+        .child(
+          S.document().schemaType("homePage").documentId("homePage")
+        ),
+      S.divider(),
       S.listItem().title("Testimonials").child(
         S.documentTypeList("testimonial").title("Testimonials")
       ),

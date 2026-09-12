@@ -24,6 +24,40 @@
     Helvetica, Arial, sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+/* Visible keyboard focus everywhere. Inputs suppress the default outline in
+   favour of a border change, which is too subtle on its own, so every
+   interactive element gets this ring on keyboard focus only. */
+.focus-ring:focus-visible,
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 2px;
+  border-radius: 0.375rem;
+}
+
+/* Respects the OS "reduce motion" setting: no smooth scrolling, no
+   accordion slide, no hamburger animation. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -31,10 +65,41 @@ body {
   letter-spacing: -0.01em;
 }
 
+/* Offsets anchored sections so the sticky header never covers the heading. */
+.anchor-section {
+  scroll-margin-top: 5.5rem;
+}
+
+/* Smooth accordion expand/collapse (grid-rows trick, no JS height calc). */
+.faq-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+
+.faq-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.faq-panel > div {
+  overflow: hidden;
+}
+
+.faq-chevron {
+  transition: transform 0.3s ease;
+}
+
+.faq-chevron[data-open="true"] {
+  transform: rotate(180deg);
+}
+
 .pill-button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
+  /* 44px tall: the minimum comfortable touch target on a phone. */
+  min-height: 2.75rem;
   border-radius: 999px;
   background: var(--pill);
   color: var(--pill-foreground);

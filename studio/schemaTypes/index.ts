@@ -2,8 +2,7 @@ import seo from "./shared/seo";
 import author from "./shared/author";
 import region from "./shared/region";
 import inquiry from "./shared/inquiry";
-import portfolioItem from "./portfolioItem";
-import service from "./service";
+import homePage from "./homePage";
 import testimonial from "./testimonial";
 import article from "./article";
 
@@ -14,8 +13,7 @@ export const schemaTypes = [
   region,
   inquiry,
   // comocontentcreator.com-specific types
-  portfolioItem,
-  service,
+  homePage,
   testimonial,
   article,
 ];

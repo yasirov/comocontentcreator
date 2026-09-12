@@ -1,17 +1,31 @@
+import Image from "next/image";
+
 export function TestimonialCard({
   quote,
   name,
   role,
+  avatar,
 }: {
   quote: string;
   name: string;
   role?: string;
+  avatar?: string;
 }) {
   return (
     <div className="rounded-3xl bg-surface p-6">
       <p className="text-sm leading-relaxed">&ldquo;{quote}&rdquo;</p>
       <div className="mt-5 flex items-center gap-3">
-        <div className="h-9 w-9 flex-shrink-0 rounded-full bg-border" aria-hidden />
+        {avatar ? (
+          <Image
+            src={avatar}
+            alt={name}
+            width={36}
+            height={36}
+            className="h-9 w-9 flex-shrink-0 rounded-full object-cover"
+          />
+        ) : (
+          <div className="h-9 w-9 flex-shrink-0 rounded-full bg-border" aria-hidden />
+        )}
         <div>
           <p className="text-sm font-medium">{name}</p>
           {role && <p className="text-xs text-muted">{role}</p>}

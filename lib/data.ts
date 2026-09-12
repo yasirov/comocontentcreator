@@ -1,6 +1,13 @@
-// Placeholder / seed content. Once the Sanity Studio has real entries,
-// lib/content.ts pulls from there instead - these arrays are only the
-// fallback shown before that.
+// Placeholder / seed content. Once the Sanity Studio's "Home Page" document
+// has real entries, lib/content.ts pulls from there instead - everything
+// below is only the fallback shown before that (or if a field is left
+// blank in the Studio).
+
+export const aboutParagraphsPlain = [
+  "Sabina has spent the last few years on Lake Como's wedding docks, terraces and villa gardens, watching first dances and first looks through a phone screen rather than a cinema camera. That closeness is the whole idea behind Como Content Creator: content shot from inside the moment, not from across the room.",
+  "Every wedding here moves fast - boats, light, guests, weather - and Sabina moves with it, catching the parts a traditional film crew has to plan around: the walk to the ceremony, the reaction shots, the reel-ready seconds that would otherwise only live in someone's memory.",
+  "The goal is simple: footage that feels like being there, ready to share before the reception is even over.",
+];
 
 // Real pricing structure Anton already uses on yasirov.com's
 // content-creator pricing page.
@@ -37,7 +44,10 @@ export const pricingPackages = [
   },
 ];
 
-// Placeholder quotes - swap for real reviews once Anton sends them.
+// Placeholder quotes, kept only as a shape reference. They are NOT shown on
+// the site: lib/content.ts returns an empty list when Sanity has no
+// testimonials, and the Reviews section hides itself rather than publishing
+// invented reviews. Add real ones in Studio and the section appears.
 export const testimonials = [
   {
     quote:
@@ -59,7 +69,7 @@ export const testimonials = [
   },
 ];
 
-export const faqs = [
+export const faqsPlain = [
   {
     question: "Do you travel for the shoot, and are travel costs included?",
     answer:
@@ -67,13 +77,12 @@ export const faqs = [
   },
   {
     question: "How long does it take to receive the final content?",
-    answer:
-      "Delivery is within 72 hours of the shoot for both packages.",
+    answer: "Delivery is within 72 hours of the shoot for both packages.",
   },
   {
-    question: "How is this different from YASIROV Films?",
+    question: "What makes wedding-day content creation different?",
     answer:
-      "YASIROV Films is our full wedding videography studio. Como Content Creator is a lighter, same-day content service focused on fast, vertical, social-ready footage.",
+      "It's a lighter, same-day service focused on fast, vertical, social-ready footage - shot alongside your main photographer and videographer, not instead of them.",
   },
   {
     question: "How do we book the date and how do payments work?",

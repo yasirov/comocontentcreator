@@ -1,8 +1,10 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/site-config";
+import { getArticles } from "@/lib/content";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = ["", "/about", "/journal"];
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const articles = await getArticles();
+  const routes = ["", "/journal", ...articles.map((a) => `/journal/${a.slug}`)];
   return routes.map((route) => ({
     url: `${siteConfig.url}${route}`,
     lastModified: new Date(),

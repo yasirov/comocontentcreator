@@ -11,9 +11,23 @@
   "observability": {
     "enabled": true
   }
-  // Once ready to deploy: `wrangler login`, then add a `routes` entry
-  // pointing at comocontentcreator.com. Per the roadmap, this project
-  // deploys straight to its real domain (unlike thelakeproposal.com and
-  // yasirov.com, which go live on a temp domain first) - but only once
-  // the content/pages are actually ready to be seen publicly.
+
+  // ─── REAL DOMAIN ────────────────────────────────────────────────────────
+  // comocontentcreator.com currently uses Squarespace's nameservers
+  // (ns-cloud-e1..e4.googledomains.com) and points at Squarespace's servers.
+  // A Workers custom domain only works once the zone lives in Cloudflare, so:
+  //
+  //   1. Cloudflare dashboard -> Add a site -> comocontentcreator.com (Free).
+  //   2. Copy the two nameservers Cloudflare gives you.
+  //   3. Squarespace domain settings -> Nameservers -> custom -> paste them.
+  //   4. Wait until Cloudflare shows the site as "Active" (usually minutes,
+  //      up to 24h).
+  //   5. Add a comma after the "observability" block above, then paste the
+  //      block below in its place, and run `npm run cf:deploy`. Wrangler
+  //      creates the DNS records and the HTTPS certificate itself.
+  //
+  // "routes": [
+  //   { "pattern": "comocontentcreator.com", "custom_domain": true },
+  //   { "pattern": "www.comocontentcreator.com", "custom_domain": true }
+  // ]
 }
