@@ -4,41 +4,66 @@
 // blank in the Studio).
 
 export const aboutParagraphsPlain = [
-  "Sabina has spent the last few years on Lake Como's wedding docks, terraces and villa gardens, watching first dances and first looks through a phone screen rather than a cinema camera. That closeness is the whole idea behind Como Content Creator: content shot from inside the moment, not from across the room.",
-  "Every wedding here moves fast - boats, light, guests, weather - and Sabina moves with it, catching the parts a traditional film crew has to plan around: the walk to the ceremony, the reaction shots, the reel-ready seconds that would otherwise only live in someone's memory.",
+  "Sabina founded Como Content Creator after a few years on Lake Como's wedding docks, terraces and villa gardens, watching first dances and first looks through a phone screen rather than a cinema camera. That closeness is the whole idea behind the studio: content shot from inside the moment, not from across the room.",
+  "She leads a small team of trusted creators who shoot alongside her on larger or multi-camera days, so every wedding gets the same fast, vertical, social-ready style regardless of package.",
+  "Every wedding here moves fast - boats, light, guests, weather - and the team moves with it, catching the parts a traditional film crew has to plan around: the walk to the ceremony, the reaction shots, the reel-ready seconds that would otherwise only live in someone's memory.",
   "The goal is simple: footage that feels like being there, ready to share before the reception is even over.",
 ];
 
-// Real pricing structure Anton already uses on yasirov.com's
-// content-creator pricing page.
+// Pricing structure - four tiers scaling by hours, number of operators/
+// cameras, and reel count. "Reel" here means the short vertical clip (up to
+// 15 sec) filmed throughout the day; each package also includes one longer
+// Highlight Reel (up to 1 minute) cut after the event.
 export const pricingPackages = [
   {
-    slug: "classic",
-    name: "Classic",
+    slug: "basic",
+    name: "Basic",
     tagline: "Told with care",
-    price: "€700",
+    price: "€1,200",
     features: [
-      "1 content creator",
-      "Up to 4 hours of coverage",
-      "30 photos",
-      "1 reel (up to 45 seconds)",
-      "1 reel (up to 15 seconds)",
-      "RAW materials included",
+      "1 content creator, phone-shot",
+      "Up to 6 hours of coverage",
+      "2 Reels (up to 15 seconds each)",
+      "1 Highlight Reel (up to 1 minute)",
+      "Delivery within 48 hours",
+    ],
+  },
+  {
+    slug: "extended",
+    name: "Extended",
+    tagline: "More of the day, captured",
+    price: "€1,700",
+    features: [
+      "1 content creator, phone-shot",
+      "Up to 8 hours of coverage",
+      "3 Reels (up to 15 seconds each)",
+      "1 Highlight Reel (up to 1 minute)",
+      "Delivery within 48 hours",
+    ],
+  },
+  {
+    slug: "hybrid",
+    name: "Hybrid",
+    tagline: "Camera and phone, one vertical style",
+    price: "€2,000",
+    features: [
+      "1 content creator, camera + phone",
+      "Up to 10 hours of coverage",
+      "5 Reels (up to 15 seconds each)",
+      "1 Highlight Reel (up to 1 minute)",
       "Delivery within 72 hours",
     ],
   },
   {
-    slug: "grand",
-    name: "Grand",
+    slug: "premium",
+    name: "Premium",
     tagline: "Remembered in full",
-    price: "€1,200",
+    price: "€2,500",
     features: [
-      "1 content creator",
+      "2 cameras, 2 content creators",
       "Up to 10 hours of coverage",
-      "50-70 photos",
-      "1 reel (up to 45 seconds)",
-      "3 reels (up to 15 seconds)",
-      "RAW materials included",
+      "7 Reels (up to 15 seconds each)",
+      "1 Highlight Reel (up to 1 minute)",
       "Delivery within 72 hours",
     ],
   },
@@ -73,11 +98,12 @@ export const faqsPlain = [
   {
     question: "Do you travel for the shoot, and are travel costs included?",
     answer:
-      "Transport is included in the price for shoots taking place on Lake Como itself. Locations further out are quoted separately.",
+      "Travel and accommodation are included in the price only for shoots taking place on Lake Como itself. Locations further out are quoted separately.",
   },
   {
     question: "How long does it take to receive the final content?",
-    answer: "Delivery is within 72 hours of the shoot for both packages.",
+    answer:
+      "Basic and Extended (phone-shot) deliver within 48 hours. Hybrid and Premium (camera-shot) deliver within 72 hours, to allow for the extra footage and editing.",
   },
   {
     question: "What makes wedding-day content creation different?",

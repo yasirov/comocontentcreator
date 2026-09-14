@@ -49,6 +49,14 @@ export type PricingPackage = {
   features: string[];
 };
 
+// How many cards sit in a row at each screen size. Set per breakpoint in
+// Studio (Pricing -> Layout); the cards resize themselves to fit.
+export type CardGridLayout = {
+  mobile?: number;
+  tablet?: number;
+  desktop?: number;
+};
+
 export type Faq = { question: string; answer: PortableTextBlock[] };
 
 export type Founder = {
@@ -74,6 +82,7 @@ export type HomePage = {
   pricingEyebrow: string;
   pricingTitle: string;
   pricingNote: string;
+  pricingLayout: CardGridLayout;
   pricingPackages: PricingPackage[];
   faqEyebrow: string;
   faqTitle: string;
@@ -104,6 +113,7 @@ const fallbackHomePage: HomePage = {
   pricingTitle: "Flexible pricing for every stage",
   pricingNote:
     "Transport is included in the price for shoots taking place on Lake Como.",
+  pricingLayout: { mobile: 1, tablet: 2, desktop: 4 },
   pricingPackages: placeholderPricingPackages,
   faqEyebrow: "FAQs",
   faqTitle: "Have questions?",
@@ -138,6 +148,12 @@ export async function getHomePage(preview = false): Promise<HomePage> {
       pricingEyebrow: doc.pricingEyebrow || fallbackHomePage.pricingEyebrow,
       pricingTitle: doc.pricingTitle || fallbackHomePage.pricingTitle,
       pricingNote: doc.pricingNote || fallbackHomePage.pricingNote,
+      // Merged field-by-field so a half-filled Layout block in Studio
+      // (e.g. only "Desktop" chosen) still falls back sensibly elsewhere.
+      pricingLayout: {
+        ...fallbackHomePage.pricingLayout,
+        ...(doc.pricingLayout || {}),
+      },
       pricingPackages:
         doc.pricingPackages?.length
           ? doc.pricingPackages
