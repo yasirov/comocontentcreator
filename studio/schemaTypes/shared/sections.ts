@@ -31,26 +31,39 @@ export const HOME_SECTIONS = [
 
 export type HomeSectionKey = (typeof HOME_SECTIONS)[number]["key"];
 
-export const DEFAULT_SECTION_ORDER: HomeSectionKey[] = HOME_SECTIONS.map(
+export const DEFAULT_SECTION_ORDER: string[] = HOME_SECTIONS.map(
   (section) => section.key
 );
 
-// Makes any saved order usable: drops keys that no longer exist,
-// de-duplicates, and slots in sections added since the order was saved.
-export function normalizeSectionOrder(value: unknown): HomeSectionKey[] {
+// Free text blocks (Home Page -> Text blocks) are movable too. Each one is
+// referenced in the order as "text:<_key>", so a block added in Studio shows
+// up in the Layout list without any code change.
+export const TEXT_BLOCK_PREFIX = "text:";
+
+export const textBlockKey = (blockKey: string) => TEXT_BLOCK_PREFIX + blockKey;
+
+// Makes any saved order usable: drops keys that no longer exist (including
+// text blocks that were deleted), de-duplicates, and slots in anything
+// added since the order was saved.
+export function normalizeSectionOrder(
+  value: unknown,
+  textKeys: string[] = []
+): string[] {
+  const known = [...DEFAULT_SECTION_ORDER, ...textKeys.map(textBlockKey)];
   const saved = Array.isArray(value) ? value : [];
-  const kept: HomeSectionKey[] = [];
+  const kept: string[] = [];
   saved.forEach((key) => {
-    if (
-      typeof key === "string" &&
-      (DEFAULT_SECTION_ORDER as string[]).includes(key) &&
-      !kept.includes(key as HomeSectionKey)
-    ) {
-      kept.push(key as HomeSectionKey);
+    if (typeof key === "string" && known.includes(key) && !kept.includes(key)) {
+      kept.push(key);
     }
   });
+  // A section missing from the saved order goes back to its default slot; a
+  // new text block goes to the end, where it is easy to find and move.
   DEFAULT_SECTION_ORDER.forEach((key, index) => {
     if (!kept.includes(key)) kept.splice(index, 0, key);
+  });
+  textKeys.map(textBlockKey).forEach((key) => {
+    if (!kept.includes(key)) kept.push(key);
   });
   return kept;
 }

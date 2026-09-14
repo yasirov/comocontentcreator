@@ -20,14 +20,17 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-MESSAGE="${1:-Revalidate cached pages so published content appears without a deploy
+MESSAGE="${1:-Wire the Studio SEO tab into page metadata, add movable text blocks
 
-- Give the home page, Journal, articles and privacy a 60-second revalidate
-  window: they were served with a one-year cache header, and a Sanity
-  publish has no way to invalidate that, so a change made in Studio could
-  sit unseen until the next deploy
-- Add the scripts behind two Journal drafts and the Home Page check
-  (publish-proposal-article.mjs, home-page-doctor.mjs)}"
+- Read meta title, description, share image and noindex from Sanity for the
+  home page and Journal articles: the SEO tab existed in Studio but nothing
+  on the site ever read it, so filling it in changed nothing
+- Give every page a canonical URL and Open Graph/Twitter tags, and mark
+  /privacy noindex
+- Add free text blocks (Home Page -> Text blocks) that can be duplicated in
+  Studio and placed anywhere in the page order through the Layout arrows,
+  with a heading, a text size and a background per block
+- Serve social share images cropped to 1200x630 through the Sanity CDN}"
 
 echo "==> 1/3  Building and deploying to Cloudflare"
 npm run cf:deploy

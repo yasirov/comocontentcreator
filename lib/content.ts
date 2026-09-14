@@ -54,6 +54,7 @@ export type Article = {
     avatarHotspot?: Hotspot;
   };
   body?: PortableTextBlock[];
+  seo?: Seo;
 };
 
 export type PricingPackage = {
@@ -89,23 +90,52 @@ export type SectionKey = (typeof SECTION_KEYS)[number];
 // Keeps a saved order usable as code changes: drops keys that no longer
 // exist, de-duplicates, and appends any section the saved order predates
 // (in its default position) instead of silently hiding it.
-export function normalizeSectionOrder(value: unknown): SectionKey[] {
+export function normalizeSectionOrder(
+  value: unknown,
+  textKeys: string[] = []
+): string[] {
+  const textEntries = textKeys.map((key) => TEXT_BLOCK_PREFIX + key);
+  const known = [...(SECTION_KEYS as readonly string[]), ...textEntries];
   const saved = Array.isArray(value) ? value : [];
-  const kept: SectionKey[] = [];
+  const kept: string[] = [];
   saved.forEach((key) => {
-    if (
-      typeof key === "string" &&
-      (SECTION_KEYS as readonly string[]).includes(key) &&
-      !kept.includes(key as SectionKey)
-    ) {
-      kept.push(key as SectionKey);
+    if (typeof key === "string" && known.includes(key) && !kept.includes(key)) {
+      kept.push(key);
     }
   });
+  // A fixed section missing from a saved order returns to its default slot;
+  // a text block added since goes to the end, where it is easy to find.
   SECTION_KEYS.forEach((key, index) => {
     if (!kept.includes(key)) kept.splice(index, 0, key);
   });
+  textEntries.forEach((key) => {
+    if (!kept.includes(key)) kept.push(key);
+  });
   return kept;
 }
+
+// What Studio's SEO tab fills in. Every field is optional: the page falls
+// back to the copy written in code, so an empty SEO tab is a valid state
+// rather than a page with no description.
+export type Seo = {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  noIndex?: boolean;
+};
+
+// A free block of text placed anywhere in the page order (Studio: Home Page
+// -> Text blocks). Movable through the same Layout arrows as the fixed
+// sections, referenced in sectionOrder as "text:<key>".
+export type TextBlock = {
+  _key: string;
+  title?: string;
+  body?: PortableTextBlock[];
+  size?: "normal" | "small";
+  background?: "background" | "surface";
+};
+
+export const TEXT_BLOCK_PREFIX = "text:";
 
 export type Faq = { question: string; answer: PortableTextBlock[] };
 
@@ -151,7 +181,9 @@ export type HomePage = {
   // arrows in Studio (Home Page -> Layout). Unknown keys are ignored and
   // anything missing is appended in its default position, so adding a new
   // section in code never leaves a saved order stale.
-  sectionOrder: SectionKey[];
+  sectionOrder: string[];
+  textBlocks: TextBlock[];
+  seo?: Seo;
 };
 
 const fallbackHomePage: HomePage = {
@@ -188,6 +220,7 @@ const fallbackHomePage: HomePage = {
   // than leaving the studio's own name unlinked in the one place on this
   // site that mentions it.
   sectionOrder: [...SECTION_KEYS],
+  textBlocks: [],
   seoIntro: [
     toBlockWithLinks(seoIntroPlain[0], [
       { text: "YASIROV Films", href: "https://yasirov.com" },
@@ -242,7 +275,12 @@ export async function getHomePage(preview = false): Promise<HomePage> {
       contactEmail: doc.contactEmail || fallbackHomePage.contactEmail,
       instagramUrl: doc.instagramUrl || fallbackHomePage.instagramUrl,
       seoIntro: normalizeRichText(doc.seoIntro, fallbackHomePage.seoIntro),
-      sectionOrder: normalizeSectionOrder(doc.sectionOrder),
+      textBlocks: doc.textBlocks || [],
+      sectionOrder: normalizeSectionOrder(
+        doc.sectionOrder,
+        (doc.textBlocks || []).map((block) => block._key)
+      ),
+      seo: doc.seo,
     };
   } catch {
     return fallbackHomePage;

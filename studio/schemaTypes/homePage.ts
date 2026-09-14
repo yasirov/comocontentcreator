@@ -12,6 +12,7 @@ export default defineType({
   type: "document",
   groups: [
     { name: "layout", title: "Layout" },
+    { name: "textBlocks", title: "Text blocks" },
     { name: "hero", title: "Hero" },
     { name: "about", title: "About" },
     { name: "pricing", title: "Pricing" },
@@ -30,6 +31,68 @@ export default defineType({
       of: [defineArrayMember({ type: "string" })],
       initialValue: [...DEFAULT_SECTION_ORDER],
       components: { input: SectionOrderInput },
+    }),
+
+    defineField({
+      name: "textBlocks",
+      title: "Free text blocks",
+      description:
+        "Extra blocks of text you can place anywhere on the page. Add one here, write the heading and the text, then use the Layout tab to move it under the pricing cards, above the FAQ, wherever you want. Use the \u22ee menu on a block to duplicate it.",
+      type: "array",
+      group: "textBlocks",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "textBlock",
+          fields: [
+            defineField({
+              name: "title",
+              title: "Heading",
+              description: "Leave empty for text with no heading above it.",
+              type: "string",
+            }),
+            defineField({
+              name: "body",
+              title: "Text",
+              description: "Select any word or phrase to add a link.",
+              type: "array",
+              of: [richTextBlock()],
+            }),
+            defineField({
+              name: "size",
+              title: "Text size",
+              type: "string",
+              initialValue: "normal",
+              options: {
+                list: [
+                  { title: "Normal", value: "normal" },
+                  { title: "Small (like the summary at the foot of the page)", value: "small" },
+                ],
+                layout: "radio",
+              },
+            }),
+            defineField({
+              name: "background",
+              title: "Background",
+              type: "string",
+              initialValue: "background",
+              options: {
+                list: [
+                  { title: "White", value: "background" },
+                  { title: "Grey", value: "surface" },
+                ],
+                layout: "radio",
+              },
+            }),
+          ],
+          preview: {
+            select: { title: "title" },
+            prepare: ({ title }: { title?: string }) => ({
+              title: title || "Text block",
+            }),
+          },
+        }),
+      ],
     }),
 
     defineField({

@@ -7,6 +7,7 @@ import { RichText } from "@/components/RichText";
 import { PillButton } from "@/components/PillButton";
 import { getArticle } from "@/lib/content";
 import { focalPosition } from "@/lib/image";
+import { metadataFrom } from "@/lib/seo";
 import { toPlainText } from "@/lib/portable-text";
 
 // How long a rendered copy of this page may be served from the Cloudflare
@@ -26,10 +27,12 @@ export async function generateMetadata({
   const { slug } = await params;
   const article = await getArticle(slug);
   if (!article) return {};
-  return {
+  return metadataFrom(article.seo, {
     title: article.title,
     description: article.excerpt,
-  };
+    path: `/journal/${slug}`,
+    image: article.coverImage,
+  });
 }
 
 export default async function ArticlePage({

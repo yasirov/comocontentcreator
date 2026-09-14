@@ -4,6 +4,7 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { JournalList } from "@/components/JournalList";
 import { PillButton } from "@/components/PillButton";
 import { getArticles } from "@/lib/content";
+import { metadataFrom } from "@/lib/seo";
 
 // How long a rendered copy of this page may be served from the Cloudflare
 // cache before it is rebuilt in the background. Content published in Studio
@@ -14,11 +15,12 @@ import { getArticles } from "@/lib/content";
 // so the Presentation preview stays instant.
 export const revalidate = 60;
 
-export const metadata: Metadata = {
-  title: "Journal",
+export const metadata: Metadata = metadataFrom(undefined, {
+  title: "Journal | Notes on wedding content creation on Lake Como",
   description:
     "Notes on wedding content creation on Lake Como - venues, timing, and why every couple is adding a content creator to their day.",
-};
+  path: "/journal",
+});
 
 export default async function JournalPage() {
   const { isEnabled: isPreview } = await draftMode();

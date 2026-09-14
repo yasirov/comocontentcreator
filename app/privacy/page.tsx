@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site-config";
+import { metadataFrom } from "@/lib/seo";
 
 // How long a rendered copy of this page may be served from the Cloudflare
 // cache before it is rebuilt in the background. Content published in Studio
@@ -22,13 +23,18 @@ export const revalidate = 60;
 // Cloudflare Turnstile. The identity of the controller lives in
 // lib/site-config.ts under `legal`.
 
-export const metadata: Metadata = {
-  title: "Privacy Policy",
-  description:
-    "How Como Content Creator collects, uses and stores the personal data you send through the contact form, and the rights you have over it.",
-};
+export const metadata: Metadata = metadataFrom(
+  { noIndex: true },
+  {
+    title: "Privacy Policy",
+    description:
+      "How Como Content Creator collects, uses and stores the personal data you send through the contact form, and the rights you have over it.",
+    path: "/privacy",
+  }
+);
 
 const { legal, name, url } = siteConfig;
+
 
 function Section({
   title,

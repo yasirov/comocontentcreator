@@ -14,12 +14,16 @@ import { faqSchema, serviceSchema, websiteSchema } from "@/lib/schema";
 import {
   getHomePage,
   getTestimonials,
+  TEXT_BLOCK_PREFIX,
   type CardGridLayout,
   type SectionKey,
+  type TextBlock,
 } from "@/lib/content";
 import { focalPosition } from "@/lib/image";
 import { siteConfig } from "@/lib/site-config";
 import { toPlainText } from "@/lib/portable-text";
+import { metadataFrom } from "@/lib/seo";
+import type { Metadata } from "next";
 
 // How long a rendered copy of this page may be served from the Cloudflare
 // cache before it is rebuilt in the background. Content published in Studio
@@ -29,6 +33,17 @@ import { toPlainText } from "@/lib/portable-text";
 // without re-rendering on every request. Draft Mode bypasses this entirely,
 // so the Presentation preview stays instant.
 export const revalidate = 60;
+
+// Title and description come from Studio (Home Page -> SEO) when they are
+// filled in, and from the copy below when they are not.
+export async function generateMetadata(): Promise<Metadata> {
+  const home = await getHomePage();
+  return metadataFrom(home.seo, {
+    title: `${siteConfig.name} | Photo & Video Content on Lake Como`,
+    description: siteConfig.description,
+    path: "/",
+  });
+}
 
 // "https://www.instagram.com/sabina_yasirova" -> "@sabina_yasirova"
 function instagramHandle(url: string) {
@@ -69,6 +84,44 @@ export default async function Home() {
   // Each block carries its own background and vertical padding rather than
   // inheriting them from a wrapper, because any two of them can end up
   // next to each other.
+  // One renderer per free text block from Studio, keyed the way the Layout
+  // tab refers to them.
+  function textBlockSection(block: TextBlock): ReactNode {
+    if (!block.body?.length && !block.title) return null;
+    const small = block.size === "small";
+    return (
+      <section
+        key={TEXT_BLOCK_PREFIX + block._key}
+        className={`${
+          block.background === "surface" ? "bg-surface" : "bg-background"
+        } ${small ? "py-16" : "py-20"}`}
+      >
+        <div className={`mx-auto px-6 ${small ? "max-w-3xl" : "max-w-4xl"}`}>
+          {block.title && (
+            <h2
+              className={
+                small
+                  ? "text-sm font-semibold tracking-tight text-foreground"
+                  : "text-3xl font-semibold leading-tight tracking-tight md:text-4xl"
+              }
+            >
+              {block.title}
+            </h2>
+          )}
+          <div
+            className={`${block.title ? "mt-4" : ""} ${
+              small
+                ? "text-sm leading-relaxed text-muted"
+                : "text-muted leading-relaxed"
+            } [&_a]:underline`}
+          >
+            <RichText value={block.body} />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   const sections: Record<SectionKey, ReactNode> = {
     about: (
       <section
@@ -326,7 +379,15 @@ export default async function Home() {
         </div>
       </section>
 
-      {home.sectionOrder.map((key) => sections[key])}
+      {home.sectionOrder.map((key) => {
+        if (key.startsWith(TEXT_BLOCK_PREFIX)) {
+          const block = home.textBlocks.find(
+            (item) => item._key === key.slice(TEXT_BLOCK_PREFIX.length)
+          );
+          return block ? textBlockSection(block) : null;
+        }
+        return sections[key as SectionKey];
+      })}
     </>
   );
 }

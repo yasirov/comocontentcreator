@@ -1,11 +1,13 @@
 import { ArrowDownIcon, ArrowUpIcon } from "@sanity/icons";
 import { Box, Button, Card, Flex, Stack, Text } from "@sanity/ui";
-import { set, type ArrayOfPrimitivesInputProps } from "sanity";
+import { set, useFormValue, type ArrayOfPrimitivesInputProps } from "sanity";
 import {
   HOME_SECTIONS,
+  TEXT_BLOCK_PREFIX,
   normalizeSectionOrder,
-  type HomeSectionKey,
 } from "../schemaTypes/shared/sections";
+
+type TextBlock = { _key: string; title?: string };
 
 // The page-builder control Anton asked for: one row per block on the home
 // page, with an up and a down arrow to move it. Sanity's stock array input
@@ -14,26 +16,47 @@ import {
 //
 // The field stores a plain list of section keys, so nothing here is needed
 // to read it back on the site - see SECTION_KEYS in lib/content.ts.
+//
 // Typed with Sanity's default primitive union rather than <string>: the
 // field accepts any primitive as far as the schema is concerned, and
 // normalizeSectionOrder throws away anything that isn't a known key.
 export function SectionOrderInput(props: ArrayOfPrimitivesInputProps) {
   const { value, onChange, readOnly } = props;
-  const keys = normalizeSectionOrder(value);
+
+  // Text blocks live in a sibling field, so the list of movable rows has to
+  // be read from the document rather than from this field alone.
+  const textBlocks = (useFormValue(["textBlocks"]) as TextBlock[] | undefined) ?? [];
+  const keys = normalizeSectionOrder(
+    value,
+    textBlocks.map((block) => block._key)
+  );
 
   function move(from: number, to: number) {
     if (to < 0 || to >= keys.length) return;
-    const next: HomeSectionKey[] = [...keys];
+    const next = [...keys];
     const [moved] = next.splice(from, 1);
     next.splice(to, 0, moved);
     onChange(set(next));
   }
 
+  function label(key: string): { title: string; hint?: string } {
+    if (key.startsWith(TEXT_BLOCK_PREFIX)) {
+      const block = textBlocks.find(
+        (item) => item._key === key.slice(TEXT_BLOCK_PREFIX.length)
+      );
+      return {
+        title: block?.title || "Text block",
+        hint: "A free text block (Text blocks tab)",
+      };
+    }
+    const section = HOME_SECTIONS.find((item) => item.key === key);
+    return { title: section?.title ?? key, hint: section?.hint };
+  }
+
   return (
     <Stack space={2}>
       {keys.map((key, index) => {
-        const section = HOME_SECTIONS.find((item) => item.key === key);
-        const title = section?.title ?? key;
+        const { title, hint } = label(key);
         return (
           <Card key={key} padding={3} radius={2} shadow={1}>
             <Flex align="center" gap={2}>
@@ -41,10 +64,10 @@ export function SectionOrderInput(props: ArrayOfPrimitivesInputProps) {
                 <Text size={1} weight="semibold">
                   {index + 1}. {title}
                 </Text>
-                {section?.hint && (
+                {hint && (
                   <Box marginTop={2}>
                     <Text size={1} muted>
-                      {section.hint}
+                      {hint}
                     </Text>
                   </Box>
                 )}

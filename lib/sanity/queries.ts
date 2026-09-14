@@ -15,6 +15,10 @@ const AVATAR_PARAMS = "?w=320&fit=max&auto=format&q=80";
 // sets in Studio. This just caps the file size.
 const FOUNDER_PHOTO_PARAMS = "?w=800&fit=max&auto=format&q=82";
 const COVER_PARAMS = "?w=1600&fit=max&auto=format&q=82";
+// Social share images: 1200x630 is what Facebook, LinkedIn, WhatsApp and
+// X all crop to, so the CDN does the crop once rather than every scraper
+// guessing at it.
+const OG_IMAGE_PARAMS = "?w=1200&h=630&fit=crop&auto=format&q=80";
 // Images placed inside an article body. The column is 768px wide at most,
 // so 1600px is already generous on a retina screen - what matters is that
 // the original (often a 4-6 MB, 6000px camera file) never reaches the
@@ -54,7 +58,8 @@ export const homePageQuery = `*[_type == "homePage"][0]{
   instagramUrl,
   seoIntro,
   sectionOrder,
-  seo
+  textBlocks[]{ _key, title, body, size, background },
+  "seo": seo{ title, description, noIndex, "ogImage": ogImage.asset->url + "${OG_IMAGE_PARAMS}" }
 }`;
 
 export const testimonialsQuery = `*[_type == "testimonial" && featured == true] {
@@ -108,5 +113,5 @@ export const articleBySlugQuery = `*[_type == "article" && slug.current == $slug
     "avatar": avatar.asset->url + "${AVATAR_PARAMS}",
     "avatarHotspot": avatar.hotspot
   },
-  seo
+  "seo": seo{ title, description, noIndex, "ogImage": ogImage.asset->url + "${OG_IMAGE_PARAMS}" }
 }`;
