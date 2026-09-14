@@ -9,6 +9,15 @@ import { getArticle } from "@/lib/content";
 import { focalPosition } from "@/lib/image";
 import { toPlainText } from "@/lib/portable-text";
 
+// How long a rendered copy of this page may be served from the Cloudflare
+// cache before it is rebuilt in the background. Content published in Studio
+// is otherwise invisible to visitors until the next deploy: the cache
+// header on these pages is a full year, and nothing about a Sanity publish
+// tells Cloudflare to drop it. A minute keeps "publish and refresh" honest
+// without re-rendering on every request. Draft Mode bypasses this entirely,
+// so the Presentation preview stays instant.
+export const revalidate = 60;
+
 export async function generateMetadata({
   params,
 }: {

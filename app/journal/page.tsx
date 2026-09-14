@@ -5,6 +5,15 @@ import { JournalList } from "@/components/JournalList";
 import { PillButton } from "@/components/PillButton";
 import { getArticles } from "@/lib/content";
 
+// How long a rendered copy of this page may be served from the Cloudflare
+// cache before it is rebuilt in the background. Content published in Studio
+// is otherwise invisible to visitors until the next deploy: the cache
+// header on these pages is a full year, and nothing about a Sanity publish
+// tells Cloudflare to drop it. A minute keeps "publish and refresh" honest
+// without re-rendering on every request. Draft Mode bypasses this entirely,
+// so the Presentation preview stays instant.
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Journal",
   description:

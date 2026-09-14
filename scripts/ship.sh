@@ -20,20 +20,14 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-MESSAGE="${1:-Reorderable home page sections, image optimisation and tablet layout fixes
+MESSAGE="${1:-Revalidate cached pages so published content appears without a deploy
 
-- Add a Layout tab in Studio with up/down arrows for every block on the
-  home page, and render the page in that order; the summary block now sits
-  directly under the FAQ by default
-- Serve article body images through the Sanity CDN with width, quality and
-  auto-format parameters instead of the original upload, keep their own
-  aspect ratio rather than cropping to 16:9, and give them alt text
-- Let the author avatar follow its hotspot, so a round avatar crops around
-  the face instead of the middle of the frame
-- Hold the pricing grid at the tablet column count until 1280px (four cards
-  at iPad-landscape width left each one ~200px across) and widen the
-  pricing row so four cards have room
-- Break the reviews row into two columns on a tablet instead of three}"
+- Give the home page, Journal, articles and privacy a 60-second revalidate
+  window: they were served with a one-year cache header, and a Sanity
+  publish has no way to invalidate that, so a change made in Studio could
+  sit unseen until the next deploy
+- Add the scripts behind two Journal drafts and the Home Page check
+  (publish-proposal-article.mjs, home-page-doctor.mjs)}"
 
 echo "==> 1/3  Building and deploying to Cloudflare"
 npm run cf:deploy

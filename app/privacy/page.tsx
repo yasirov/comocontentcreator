@@ -2,6 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site-config";
 
+// How long a rendered copy of this page may be served from the Cloudflare
+// cache before it is rebuilt in the background. Content published in Studio
+// is otherwise invisible to visitors until the next deploy: the cache
+// header on these pages is a full year, and nothing about a Sanity publish
+// tells Cloudflare to drop it. A minute keeps "publish and refresh" honest
+// without re-rendering on every request. Draft Mode bypasses this entirely,
+// so the Presentation preview stays instant.
+export const revalidate = 60;
+
 // GDPR Article 13 notice for the contact form and the site's analytics.
 // Everything here describes what the site actually does today: one form,
 // Google Analytics gated behind the cookie banner (components/CookieConsent),
