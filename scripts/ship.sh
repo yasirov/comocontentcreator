@@ -33,10 +33,13 @@ npm run cf:deploy
 echo
 echo "==> 2/3  Committing"
 # A sandboxed shell on this machine cannot delete files, so a git run from
-# one can leave an empty index.lock behind, which then blocks every later
-# commit. Clear it only when it is empty and no git process is holding it.
-if [ -f .git/index.lock ] && [ ! -s .git/index.lock ] && ! pgrep -x git >/dev/null; then
-  rm -f .git/index.lock
+# one can leave empty lock files behind (index.lock after `git add`,
+# HEAD.lock after `git commit`), and each one blocks every later commit.
+# Clear them only when they are empty and no git process is holding them.
+if ! pgrep -x git >/dev/null; then
+  for lock in .git/index.lock .git/HEAD.lock; do
+    if [ -f "$lock" ] && [ ! -s "$lock" ]; then rm -f "$lock"; fi
+  done
 fi
 git add -A
 git commit -m "$MESSAGE" || echo "(nothing new to commit)"
