@@ -1,0 +1,30 @@
+# Cloudflare Workers Static Assets reads this file from the deployed assets
+# directory. Without it every file under /public is served with
+# "cache-control: public, max-age=0, must-revalidate", so returning visitors
+# re-validate ~8 MB of video and posters on each page load (PageSpeed flags
+# this as "Use efficient cache lifetimes").
+#
+# These paths are immutable BY CONVENTION, not by hashed filename: replacing
+# reel-1.mp4 in place will NOT reach anyone who already cached it. When a
+# clip or image really changes, give it a new filename (reel-1-v2.mp4) and
+# update the reference, rather than overwriting the old one.
+
+/videos/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.svg
+  Cache-Control: public, max-age=2592000
+
+# Baseline security headers. Deliberately NOT here: X-Frame-Options and
+# Cross-Origin-Opener-Policy. Sanity's Presentation tool loads this site in
+# an iframe from the Studio origin to do visual editing, and a framing
+# restriction would break preview mode without protecting anything the site
+# actually does.
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()

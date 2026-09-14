@@ -23,6 +23,11 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  // Lets browsers, readers and crawlers discover the journal feed from any
+  // page rather than only by guessing the URL.
+  alternates: {
+    types: { "application/rss+xml": `${siteConfig.url}/feed.xml` },
+  },
   openGraph: {
     title: siteConfig.name,
     description: siteConfig.description,
