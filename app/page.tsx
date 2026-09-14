@@ -23,6 +23,7 @@ import { focalPosition } from "@/lib/image";
 import { siteConfig } from "@/lib/site-config";
 import { toPlainText } from "@/lib/portable-text";
 import { metadataFrom } from "@/lib/seo";
+import { getSeoSettings, parseExtraJsonLd } from "@/lib/seo-settings";
 import type { Metadata } from "next";
 
 // How long a rendered copy of this page may be served from the Cloudflare
@@ -68,9 +69,10 @@ function cardGridStyle(layout: CardGridLayout, cardCount: number) {
 
 export default async function Home() {
   const { isEnabled: isPreview } = await draftMode();
-  const [home, testimonials] = await Promise.all([
+  const [home, testimonials, seoSettings] = await Promise.all([
     getHomePage(isPreview),
     getTestimonials(isPreview),
+    getSeoSettings(isPreview),
   ]);
 
   // The first founder gets the portrait treatment in About; anyone after
@@ -357,10 +359,14 @@ export default async function Home() {
             name: `${p.name} - ${p.tagline}`,
             description: p.features.join(", "),
             price: p.price,
-          }))
+          })),
+          seoSettings
         )}
       />
-      <JsonLd data={websiteSchema()} />
+      <JsonLd data={websiteSchema(seoSettings)} />
+      {parseExtraJsonLd(home.seo?.extraJsonLd).map((data, i) => (
+        <JsonLd key={`page-extra-${i}`} data={data} />
+      ))}
 
       <section className="bg-surface">
         <div className="mx-auto max-w-6xl px-6 pt-16 pb-10 md:pt-24">

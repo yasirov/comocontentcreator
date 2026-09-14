@@ -122,6 +122,7 @@ export type Seo = {
   description?: string;
   ogImage?: string;
   noIndex?: boolean;
+  extraJsonLd?: string;
 };
 
 // A free block of text placed anywhere in the page order (Studio: Home Page

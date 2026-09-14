@@ -8,6 +8,9 @@ import { PillButton } from "@/components/PillButton";
 import { getArticle } from "@/lib/content";
 import { focalPosition } from "@/lib/image";
 import { metadataFrom } from "@/lib/seo";
+import { JsonLd } from "@/components/JsonLd";
+import { articleSchema, breadcrumbSchema } from "@/lib/schema";
+import { parseExtraJsonLd } from "@/lib/seo-settings";
 import { toPlainText } from "@/lib/portable-text";
 
 // How long a rendered copy of this page may be served from the Cloudflare
@@ -56,6 +59,17 @@ export default async function ArticlePage({
 
   return (
     <article className="mx-auto max-w-3xl px-6 py-20">
+      <JsonLd data={articleSchema({ ...article, slug })} />
+      {parseExtraJsonLd(article.seo?.extraJsonLd).map((data, i) => (
+        <JsonLd key={`page-extra-${i}`} data={data} />
+      ))}
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Journal", path: "/journal" },
+          { name: article.title, path: `/journal/${slug}` },
+        ])}
+      />
       <Link href="/journal" className="text-sm text-muted hover:text-foreground">
         ← Journal
       </Link>

@@ -8,6 +8,7 @@ import { VisualEditingClient } from "@/components/VisualEditingClient";
 import { CookieConsent } from "@/components/CookieConsent";
 import { organizationSchema } from "@/lib/schema";
 import { siteConfig } from "@/lib/site-config";
+import { getSeoSettings, parseExtraJsonLd } from "@/lib/seo-settings";
 
 // Font is declared as a system stack in globals.css (--font-sans) rather
 // than next/font/google, so the build never depends on reaching
@@ -49,11 +50,15 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const { isEnabled: isPreview } = await draftMode();
+  const seoSettings = await getSeoSettings(isPreview);
 
   return (
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col">
-        <JsonLd data={organizationSchema()} />
+        <JsonLd data={organizationSchema(seoSettings)} />
+        {parseExtraJsonLd(seoSettings.extraJsonLd).map((data, i) => (
+          <JsonLd key={`extra-${i}`} data={data} />
+        ))}
         {isPreview && (
           <div className="sticky top-0 z-50 flex items-center justify-center gap-3 bg-accent px-4 py-2 text-xs font-medium text-foreground">
             Preview mode - showing unpublished edits from Sanity.

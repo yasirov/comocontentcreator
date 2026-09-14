@@ -20,17 +20,22 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-MESSAGE="${1:-Wire the Studio SEO tab into page metadata, add movable text blocks
+MESSAGE="${1:-Make robots.txt, llms.txt and the structured data editable from Studio
 
-- Read meta title, description, share image and noindex from Sanity for the
-  home page and Journal articles: the SEO tab existed in Studio but nothing
-  on the site ever read it, so filling it in changed nothing
-- Give every page a canonical URL and Open Graph/Twitter tags, and mark
-  /privacy noindex
-- Add free text blocks (Home Page -> Text blocks) that can be duplicated in
-  Studio and placed anywhere in the page order through the Layout arrows,
-  with a heading, a text size and a background per block
-- Serve social share images cropped to 1200x630 through the Sanity CDN}"
+- Add an \"SEO & AI\" document holding the business facts behind the JSON-LD,
+  the llms.txt copy, and the robots.txt rules, with every value a field or a
+  toggle rather than a raw file: a mistyped Disallow line takes a site out
+  of Google, and hand-written JSON-LD is why rich results stop appearing
+- Generate robots.txt from those toggles, with AI answer bots and AI
+  training crawlers controlled separately (OAI-SearchBot, Claude-SearchBot,
+  PerplexityBot and the live-fetch agents are what put the studio into an
+  answer with a link; GPTBot, ClaudeBot, Google-Extended and the rest are
+  training)
+- Build llms.txt from live pricing, FAQ and articles plus the editable
+  summary, and add llms-full.txt with the article text
+- Add BlogPosting and BreadcrumbList to Journal pages, point every block at
+  one canonical business entity, and allow extra JSON-LD per page
+- Give the sitemap real per-article dates instead of \"now\" on every URL}"
 
 echo "==> 1/3  Building and deploying to Cloudflare"
 npm run cf:deploy

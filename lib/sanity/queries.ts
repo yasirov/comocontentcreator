@@ -59,7 +59,7 @@ export const homePageQuery = `*[_type == "homePage"][0]{
   seoIntro,
   sectionOrder,
   textBlocks[]{ _key, title, body, size, background },
-  "seo": seo{ title, description, noIndex, "ogImage": ogImage.asset->url + "${OG_IMAGE_PARAMS}" }
+  "seo": seo{ title, description, noIndex, extraJsonLd, "ogImage": ogImage.asset->url + "${OG_IMAGE_PARAMS}" }
 }`;
 
 export const testimonialsQuery = `*[_type == "testimonial" && featured == true] {
@@ -113,5 +113,5 @@ export const articleBySlugQuery = `*[_type == "article" && slug.current == $slug
     "avatar": avatar.asset->url + "${AVATAR_PARAMS}",
     "avatarHotspot": avatar.hotspot
   },
-  "seo": seo{ title, description, noIndex, "ogImage": ogImage.asset->url + "${OG_IMAGE_PARAMS}" }
+  "seo": seo{ title, description, noIndex, extraJsonLd, "ogImage": ogImage.asset->url + "${OG_IMAGE_PARAMS}" }
 }`;

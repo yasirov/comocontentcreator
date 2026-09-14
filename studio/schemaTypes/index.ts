@@ -3,6 +3,7 @@ import author from "./shared/author";
 import region from "./shared/region";
 import inquiry from "./shared/inquiry";
 import homePage from "./homePage";
+import seoSettings from "./seoSettings";
 import testimonial from "./testimonial";
 import article from "./article";
 
@@ -14,6 +15,7 @@ export const schemaTypes = [
   inquiry,
   // comocontentcreator.com-specific types
   homePage,
+  seoSettings,
   testimonial,
   article,
 ];

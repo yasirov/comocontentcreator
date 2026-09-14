@@ -5,6 +5,8 @@ import { JournalList } from "@/components/JournalList";
 import { PillButton } from "@/components/PillButton";
 import { getArticles } from "@/lib/content";
 import { metadataFrom } from "@/lib/seo";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbSchema } from "@/lib/schema";
 
 // How long a rendered copy of this page may be served from the Cloudflare
 // cache before it is rebuilt in the background. Content published in Studio
@@ -28,6 +30,12 @@ export default async function JournalPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-20">
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Journal", path: "/journal" },
+        ])}
+      />
       <SectionHeading
         eyebrow="Journal"
         title="Notes from the field"

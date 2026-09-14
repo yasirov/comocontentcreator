@@ -34,12 +34,16 @@ export default defineConfig({
     // and don't let anyone duplicate or delete the one copy of it.
     newDocumentOptions: (prev, { creationContext }) => {
       if (creationContext.type === "global") {
-        return prev.filter((template) => template.templateId !== "homePage");
+        return prev.filter(
+          (template) =>
+            template.templateId !== "homePage" &&
+            template.templateId !== "seoSettings"
+        );
       }
       return prev;
     },
     actions: (prev, { schemaType }) => {
-      if (schemaType === "homePage") {
+      if (schemaType === "homePage" || schemaType === "seoSettings") {
         return prev.filter(
           ({ action }) => action !== "duplicate" && action !== "delete"
         );
