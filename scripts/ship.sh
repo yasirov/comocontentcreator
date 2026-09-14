@@ -20,22 +20,12 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-MESSAGE="${1:-Make robots.txt, llms.txt and the structured data editable from Studio
+MESSAGE="${1:-SEO audit fixes: exact titles, sitemap without the noindex page
 
-- Add an \"SEO & AI\" document holding the business facts behind the JSON-LD,
-  the llms.txt copy, and the robots.txt rules, with every value a field or a
-  toggle rather than a raw file: a mistyped Disallow line takes a site out
-  of Google, and hand-written JSON-LD is why rich results stop appearing
-- Generate robots.txt from those toggles, with AI answer bots and AI
-  training crawlers controlled separately (OAI-SearchBot, Claude-SearchBot,
-  PerplexityBot and the live-fetch agents are what put the studio into an
-  answer with a link; GPTBot, ClaudeBot, Google-Extended and the rest are
-  training)
-- Build llms.txt from live pricing, FAQ and articles plus the editable
-  summary, and add llms-full.txt with the article text
-- Add BlogPosting and BreadcrumbList to Journal pages, point every block at
-  one canonical business entity, and allow extra JSON-LD per page
-- Give the sitemap real per-article dates instead of \"now\" on every URL}"
+- Use the meta title typed in Studio verbatim: the root title template was
+  appending the brand a second time, so article titles ran to 78 characters
+  and read \"... | Lake Como | Como Content Creator\"
+- Drop /privacy from the sitemap now that it is served noindex}"
 
 echo "==> 1/3  Building and deploying to Cloudflare"
 npm run cf:deploy

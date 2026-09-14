@@ -33,11 +33,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
-    {
-      url: `${siteConfig.url}/privacy`,
-      lastModified: now,
-      changeFrequency: "yearly" as const,
-      priority: 0.2,
-    },
   ];
+  // /privacy is deliberately absent: it is served with noindex, and listing
+  // a noindex URL in the sitemap is a contradiction search engines report as
+  // an error in Search Console.
 }

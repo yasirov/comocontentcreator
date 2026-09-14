@@ -18,7 +18,10 @@ export function metadataFrom(
   const url = fallback.path ? `${siteConfig.url}${fallback.path}` : siteConfig.url;
 
   return {
-    title,
+    // "absolute" so the root layout's "%s | Como Content Creator" template
+    // does not append the brand to a title that already ends with it. That
+    // template still applies to any page that sets a plain string title.
+    title: { absolute: title },
     description,
     alternates: { canonical: url },
     openGraph: {
