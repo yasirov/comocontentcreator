@@ -5,13 +5,13 @@
 
 export const aboutParagraphsPlain = [
   "Sabina founded Como Content Creator after a few years on Lake Como's wedding docks, terraces and villa gardens, watching first dances and first looks through a phone screen rather than a cinema camera. That closeness is the whole idea behind the studio: content shot from inside the moment, not from across the room.",
-  "She leads a small team of trusted creators who shoot alongside her on larger or multi-camera days, so every wedding gets the same fast, vertical, social-ready style regardless of package.",
+  "She leads a small team of trusted creators who shoot alongside her on larger or busier days, so every wedding gets the same fast, vertical, social-ready style regardless of package.",
   "Every wedding here moves fast - boats, light, guests, weather - and the team moves with it, catching the parts a traditional film crew has to plan around: the walk to the ceremony, the reaction shots, the reel-ready seconds that would otherwise only live in someone's memory.",
   "The goal is simple: footage that feels like being there, ready to share before the reception is even over.",
 ];
 
-// Pricing structure - four tiers scaling by hours, number of operators/
-// cameras, and reel count. "Reel" here means the short vertical clip (up to
+// Pricing structure - four tiers scaling by hours, kit (phone, or phone
+// plus a VHS camera, plus a drone on Premium) and reel count. "Reel" here means the short vertical clip (up to
 // 15 sec) filmed throughout the day; each package also includes one longer
 // Highlight Reel (up to 1 minute) cut after the event.
 export const pricingPackages = [
@@ -44,13 +44,14 @@ export const pricingPackages = [
   {
     slug: "hybrid",
     name: "Hybrid",
-    tagline: "Camera and phone, one vertical style",
+    tagline: "VHS camera and phone, one vertical style",
     price: "€2,000",
     features: [
-      "1 content creator, camera + phone",
+      "1 content creator, VHS camera + phone",
       "Up to 10 hours of coverage",
-      "5 Reels (up to 15 seconds each)",
+      "4 Reels (up to 15 seconds each)",
       "1 Highlight Reel (up to 1 minute)",
+      "RAW materials",
       "Delivery within 72 hours",
     ],
   },
@@ -58,12 +59,13 @@ export const pricingPackages = [
     slug: "premium",
     name: "Premium",
     tagline: "Remembered in full",
-    price: "€2,500",
+    price: "€2,800",
     features: [
-      "2 cameras, 2 content creators",
+      "1 content creator, VHS camera + phone",
       "Up to 10 hours of coverage",
-      "7 Reels (up to 15 seconds each)",
+      "4 Reels (up to 15 seconds each)",
       "1 Highlight Reel (up to 1 minute)",
+      "Drone",
       "Delivery within 72 hours",
     ],
   },
@@ -103,7 +105,7 @@ export const faqsPlain = [
   {
     question: "How long does it take to receive the final content?",
     answer:
-      "Basic and Extended (phone-shot) deliver within 48 hours. Hybrid and Premium (camera-shot) deliver within 72 hours, to allow for the extra footage and editing.",
+      "Basic and Extended (phone-shot) deliver within 48 hours. Hybrid and Premium (VHS camera) deliver within 72 hours, to allow for the extra footage and editing.",
   },
   {
     question: "What makes wedding-day content creation different?",
@@ -123,7 +125,7 @@ export const faqsPlain = [
 // from without having to infer it from headings and price cards.
 export const seoIntroPlain = [
   "Como Content Creator is a wedding content creation service based in Como, Italy, working across Lake Como - Bellagio, Varenna, Menaggio, Cernobbio and the villas and lakeside venues around them. The studio was founded by Sabina Yasirova, co-founder and producer at the wedding film studio YASIROV Films, and works with a small team of content creators.",
-  "A wedding content creator films your day vertically, mostly on a phone and, on the larger packages, on a camera as well. The output is social-ready: short Reels of up to 15 seconds filmed throughout the day, plus one Highlight Reel of up to a minute. Part of it reaches you while the wedding is still happening; the rest is edited and delivered within 48 hours on the phone-shot packages and 72 hours on the camera packages.",
+  "A wedding content creator films your day vertically, mostly on a phone and, on the larger packages, on a VHS camera as well. The output is social-ready: short Reels of up to 15 seconds filmed throughout the day, plus one Highlight Reel of up to a minute. Part of it reaches you while the wedding is still happening; the rest is edited and delivered within 48 hours on the phone-shot packages and 72 hours on the VHS camera packages.",
   "This is not a replacement for a wedding videographer, and it is not meant to be. A wedding film is a crafted, cinematic record of the day, shot and edited over weeks - it is the version you will still be watching in ten years, and for most couples it remains the more important of the two. Content creation is a separate, lighter service that runs alongside it and answers a different need: having the day online, in your own voice, while people are still talking about it.",
-  "Packages run from €1,200 to €2,500 depending on hours of coverage, the number of Reels and whether the day is filmed on a phone, on a camera, or with two cameras and two creators. Travel and accommodation are included for weddings on Lake Como itself; locations further out are quoted separately.",
+  "Packages run from €1,200 to €2,800 depending on hours of coverage, the number of Reels and whether the day is filmed on a phone or on a VHS camera, and whether it includes drone footage. Travel and accommodation are included for weddings on Lake Como itself; locations further out are quoted separately.",
 ];

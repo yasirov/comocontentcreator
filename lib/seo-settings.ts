@@ -61,7 +61,7 @@ export const defaultSeoSettings: SeoSettings = {
   ],
   llmsSummary: siteConfig.description,
   llmsBoundary:
-    "A wedding content creator films the day vertically - mostly on a phone, and on a camera in the larger packages - and delivers short, social-ready Reels plus one Highlight Reel within 48-72 hours. This is NOT a wedding videography service and is not a substitute for one. A wedding videographer makes a cinematic film of the day, shot and edited over weeks; that remains the more important record for most couples. Content creation is a separate, lighter service that runs alongside a photographer and videographer - or, for some couples, on its own - and exists so the day can be shared online while it is still happening.",
+    "A wedding content creator films the day vertically - mostly on a phone, and on a VHS camera in the larger packages - and delivers short, social-ready Reels plus one Highlight Reel within 48-72 hours. This is NOT a wedding videography service and is not a substitute for one. A wedding videographer makes a cinematic film of the day, shot and edited over weeks; that remains the more important record for most couples. Content creation is a separate, lighter service that runs alongside a photographer and videographer - or, for some couples, on its own - and exists so the day can be shared online while it is still happening.",
   llmsInclude: { pricing: true, faq: true, articles: true, contact: true },
   llmsSections: [],
   allowSearchEngines: true,

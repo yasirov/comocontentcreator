@@ -38,7 +38,7 @@ const client = createClient({
 const HOME = {
   title: "Wedding Content Creator on Lake Como | Como Content Creator",
   description:
-    "Same-day vertical Reels from your Lake Como wedding, filmed alongside your photographer and videographer. Packages from EUR 1,200, delivered in 48 hours.",
+    "Same-day vertical Reels from your Lake Como wedding, filmed alongside your photographer and videographer. Packages from EUR 1,200, delivered within 48 to 72 hours.",
 };
 
 const ARTICLES = {

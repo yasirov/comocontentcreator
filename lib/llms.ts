@@ -38,6 +38,20 @@ export async function buildLlmsTxt({ full = false }: { full?: boolean } = {}) {
     parts.push(`## Pricing\n${lines}\n${home.pricingNote}`);
   }
 
+  // Free text blocks from the page (Studio: Home Page -> Text blocks). The
+  // note about tax sits under the pricing cards, and an assistant quoting a
+  // price should quote that caveat with it.
+  const blockNotes = home.textBlocks
+    .map((block) => {
+      const text = block.body?.length ? toPlainText(block.body) : "";
+      if (!text) return "";
+      return block.title ? `${block.title}: ${text}` : text;
+    })
+    .filter(Boolean);
+  if (blockNotes.length) {
+    parts.push(`## Notes on the pricing\n${blockNotes.join("\n")}`);
+  }
+
   if (settings.llmsInclude.faq && home.faqs.length) {
     const lines = home.faqs
       .map((f) => `Q: ${f.question}\nA: ${toPlainText(f.answer)}`)
