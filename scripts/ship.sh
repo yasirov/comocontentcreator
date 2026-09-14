@@ -40,6 +40,10 @@ if ! pgrep -x git >/dev/null; then
   for lock in .git/index.lock .git/HEAD.lock; do
     if [ -f "$lock" ] && [ ! -s "$lock" ]; then rm -f "$lock"; fi
   done
+  # Same cause, different leftovers: a commit made from the sandbox cannot
+  # unlink its temporary object files, so .git/objects/??/tmp_obj_* pile up.
+  # They are inert, but `git gc` complains about them forever.
+  find .git/objects -name 'tmp_obj_*' -mmin +5 -delete 2>/dev/null || true
 fi
 git add -A
 git commit -m "$MESSAGE" || echo "(nothing new to commit)"
