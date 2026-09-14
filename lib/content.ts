@@ -12,6 +12,7 @@ import {
   seoIntroPlain,
 } from "@/lib/data";
 import { siteConfig } from "@/lib/site-config";
+import type { Hotspot } from "@/lib/image";
 import {
   toBlocks,
   toBlock,
@@ -26,11 +27,14 @@ import {
 // request fails, e.g. before NEXT_PUBLIC_SANITY_PROJECT_ID is set) - so the
 // site never shows an empty section while content is still being entered.
 
+export type { Hotspot };
+
 export type Testimonial = {
   quote: string;
   name: string;
   role?: string;
   avatar?: string;
+  avatarHotspot?: Hotspot;
 };
 
 export type Article = {
@@ -41,9 +45,14 @@ export type Article = {
   coverImage?: string;
   // Same hotspot mechanism as the founder photos: lets a portrait-shaped
   // cover keep the face in frame inside a landscape card.
-  coverHotspot?: { x: number; y: number };
+  coverHotspot?: Hotspot;
   region?: string;
-  author?: { name: string; role?: string; avatar?: string };
+  author?: {
+    name: string;
+    role?: string;
+    avatar?: string;
+    avatarHotspot?: Hotspot;
+  };
   body?: PortableTextBlock[];
 };
 
@@ -62,6 +71,42 @@ export type CardGridLayout = {
   desktop?: number;
 };
 
+// Every movable block on the home page, in the order it ships in. The
+// hero is deliberately not in the list: it is the top of the page by
+// definition, and nothing sensible happens if it moves.
+export const SECTION_KEYS = [
+  "about",
+  "pricing",
+  "reviews",
+  "faq",
+  "seo",
+  "closing",
+  "contact",
+] as const;
+
+export type SectionKey = (typeof SECTION_KEYS)[number];
+
+// Keeps a saved order usable as code changes: drops keys that no longer
+// exist, de-duplicates, and appends any section the saved order predates
+// (in its default position) instead of silently hiding it.
+export function normalizeSectionOrder(value: unknown): SectionKey[] {
+  const saved = Array.isArray(value) ? value : [];
+  const kept: SectionKey[] = [];
+  saved.forEach((key) => {
+    if (
+      typeof key === "string" &&
+      (SECTION_KEYS as readonly string[]).includes(key) &&
+      !kept.includes(key as SectionKey)
+    ) {
+      kept.push(key as SectionKey);
+    }
+  });
+  SECTION_KEYS.forEach((key, index) => {
+    if (!kept.includes(key)) kept.splice(index, 0, key);
+  });
+  return kept;
+}
+
 export type Faq = { question: string; answer: PortableTextBlock[] };
 
 export type Founder = {
@@ -72,7 +117,7 @@ export type Founder = {
   // Sanity's image hotspot: the point (0-1, 0-1) Sabina drags to in Studio
   // to pick what stays in frame when the photo is cropped. Lets her move
   // the framing herself any time, without a code change.
-  photoHotspot?: { x: number; y: number };
+  photoHotspot?: Hotspot;
 };
 
 export type HomePage = {
@@ -102,6 +147,11 @@ export type HomePage = {
   // skim and for search engines / AI assistants that need the service
   // described in sentences rather than inferred from price cards.
   seoIntro: PortableTextBlock[];
+  // The order the blocks below the hero appear in, set with the up/down
+  // arrows in Studio (Home Page -> Layout). Unknown keys are ignored and
+  // anything missing is appended in its default position, so adding a new
+  // section in code never leaves a saved order stale.
+  sectionOrder: SectionKey[];
 };
 
 const fallbackHomePage: HomePage = {
@@ -137,6 +187,7 @@ const fallbackHomePage: HomePage = {
   // First paragraph names YASIROV Films - link it to yasirov.com rather
   // than leaving the studio's own name unlinked in the one place on this
   // site that mentions it.
+  sectionOrder: [...SECTION_KEYS],
   seoIntro: [
     toBlockWithLinks(seoIntroPlain[0], [
       { text: "YASIROV Films", href: "https://yasirov.com" },
@@ -191,6 +242,7 @@ export async function getHomePage(preview = false): Promise<HomePage> {
       contactEmail: doc.contactEmail || fallbackHomePage.contactEmail,
       instagramUrl: doc.instagramUrl || fallbackHomePage.instagramUrl,
       seoIntro: normalizeRichText(doc.seoIntro, fallbackHomePage.seoIntro),
+      sectionOrder: normalizeSectionOrder(doc.sectionOrder),
     };
   } catch {
     return fallbackHomePage;
@@ -204,6 +256,7 @@ export async function getTestimonials(preview = false): Promise<Testimonial[]> {
       role?: string;
       quote: string;
       avatar?: string;
+      avatarHotspot?: Hotspot;
     }[] = await getSanityClient(preview).fetch(testimonialsQuery);
     // No invented reviews: an empty list hides the section entirely.
     if (!items?.length) return [];
@@ -212,6 +265,7 @@ export async function getTestimonials(preview = false): Promise<Testimonial[]> {
       name: t.clientName,
       role: t.role,
       avatar: t.avatar,
+      avatarHotspot: t.avatarHotspot,
     }));
   } catch {
     return [];

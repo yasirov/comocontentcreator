@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { Article } from "@/lib/content";
+import { focalPosition } from "@/lib/image";
 
 // "2026-09-14" -> { day: "14", month: "Sep" } for the corner date badge.
 function dateParts(iso?: string) {
@@ -15,14 +16,6 @@ function dateParts(iso?: string) {
     month: date.toLocaleDateString("en-GB", { month: "short" }),
     iso: date.toISOString(),
   };
-}
-
-// Sanity hotspot (0-1, 0-1) -> CSS object-position. A portrait cover inside
-// a landscape card otherwise crops to the middle of the frame, which on a
-// standing portrait means the chest rather than the face.
-function focalPosition(hotspot?: { x: number; y: number }) {
-  if (!hotspot) return "center";
-  return `${Math.round(hotspot.x * 100)}% ${Math.round(hotspot.y * 100)}%`;
 }
 
 export function JournalList({ articles }: { articles: Article[] }) {

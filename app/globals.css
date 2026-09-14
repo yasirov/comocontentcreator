@@ -43,7 +43,11 @@ html {
    names at runtime, so the column count is passed in as --cols-* on the
    element and read here.
 
-   Breakpoints: phone (< 640px), tablet (640-1023px), desktop (>= 1024px).
+   Breakpoints: phone (< 640px), tablet (640-1279px), desktop (>= 1280px).
+   The desktop count deliberately waits until 1280px: an iPad in landscape
+   is 1024px wide, and four cards squeezed into that leaves each one about
+   200px across, with every feature line wrapping twice. It keeps the
+   tablet count instead.
 
    Cards size themselves: minmax(0, 1fr) splits the row evenly, and the
    max-width caps each card at ~24rem so two cards don't stretch into
@@ -64,7 +68,7 @@ html {
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
   .card-grid {
     grid-template-columns: repeat(var(--cols-desktop, 3), minmax(0, 1fr));
     max-width: calc(

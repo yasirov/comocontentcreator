@@ -3,13 +3,23 @@
 // uploaded image is served already resized and re-encoded (usually WebP),
 // instead of the original full-size file, without touching how images are
 // uploaded in the Studio.
-const AVATAR_PARAMS = "?w=160&h=160&fit=crop&auto=format&q=80";
+// No forced square crop: the round avatar is cropped in the browser via
+// object-fit plus the hotspot the author sets in Studio, the same way the
+// founder photos work. A server-side "fit=crop" would centre on the middle
+// of the frame and cut the top of a head off before the browser ever sees
+// it. 320px wide covers the 36px avatar on a 3x retina screen.
+const AVATAR_PARAMS = "?w=320&fit=max&auto=format&q=80";
 // No forced square crop here (unlike AVATAR_PARAMS) - the same founder photo
 // is shown both as a round avatar and as a tall 4:5 portrait, so the crop
 // has to happen in the browser via object-fit, using the hotspot Sabina
 // sets in Studio. This just caps the file size.
 const FOUNDER_PHOTO_PARAMS = "?w=800&fit=max&auto=format&q=82";
 const COVER_PARAMS = "?w=1600&fit=max&auto=format&q=82";
+// Images placed inside an article body. The column is 768px wide at most,
+// so 1600px is already generous on a retina screen - what matters is that
+// the original (often a 4-6 MB, 6000px camera file) never reaches the
+// browser untouched. "auto=format" re-encodes to WebP/AVIF where supported.
+const BODY_IMAGE_PARAMS = "?w=1600&fit=max&auto=format&q=82";
 
 export const homePageQuery = `*[_type == "homePage"][0]{
   _id,
@@ -43,6 +53,7 @@ export const homePageQuery = `*[_type == "homePage"][0]{
   contactEmail,
   instagramUrl,
   seoIntro,
+  sectionOrder,
   seo
 }`;
 
@@ -52,7 +63,8 @@ export const testimonialsQuery = `*[_type == "testimonial" && featured == true] 
   clientName,
   role,
   quote,
-  "avatar": avatar.asset->url + "${AVATAR_PARAMS}"
+  "avatar": avatar.asset->url + "${AVATAR_PARAMS}",
+  "avatarHotspot": avatar.hotspot
 }`;
 
 export const articlesQuery = `*[_type == "article" && defined(slug.current)] | order(publishedAt desc) {
@@ -66,7 +78,8 @@ export const articlesQuery = `*[_type == "article" && defined(slug.current)] | o
   author->{
     name,
     role,
-    "avatar": avatar.asset->url + "${AVATAR_PARAMS}"
+    "avatar": avatar.asset->url + "${AVATAR_PARAMS}",
+    "avatarHotspot": avatar.hotspot
   }
 }`;
 
@@ -75,14 +88,25 @@ export const articleBySlugQuery = `*[_type == "article" && slug.current == $slug
   title,
   excerpt,
   publishedAt,
-  body,
+  // Image blocks inside the body carry only an asset reference. Resolving
+  // the URL here (with the transform params above) is what stops the
+  // original camera file being served straight to the browser.
+  body[]{
+    ...,
+    _type == "image" => {
+      ...,
+      "url": asset->url + "${BODY_IMAGE_PARAMS}",
+      "dimensions": asset->metadata.dimensions
+    }
+  },
   "coverImage": coverImage.asset->url + "${COVER_PARAMS}",
   "coverHotspot": coverImage.hotspot,
   "region": region->name,
   author->{
     name,
     role,
-    "avatar": avatar.asset->url + "${AVATAR_PARAMS}"
+    "avatar": avatar.asset->url + "${AVATAR_PARAMS}",
+    "avatarHotspot": avatar.hotspot
   },
   seo
 }`;

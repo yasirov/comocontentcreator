@@ -5,7 +5,11 @@ export function Footer() {
   return (
     <footer className="bg-surface">
       <div className="mx-auto max-w-6xl px-6 py-16">
-        <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-4">
+        {/* Four columns only from 1024px up. At 768px each column was 150px
+            wide and the email address is 206px, so the footer pushed the
+            whole page 32px wider than the screen and every page scrolled
+            sideways on a tablet. */}
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <p className="text-sm font-semibold">
               {siteConfig.name.toUpperCase()}
@@ -59,7 +63,7 @@ export function Footer() {
               </a>
               <a
                 href={`mailto:${siteConfig.contactEmail}`}
-                className="inline-block py-1.5 hover:text-foreground"
+                className="inline-block break-words py-1.5 hover:text-foreground"
               >
                 {siteConfig.contactEmail}
               </a>

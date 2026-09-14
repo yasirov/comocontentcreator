@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import Script from "next/script";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site-config";
@@ -38,18 +38,47 @@ function writeConsent(choice: Consent["choice"]) {
   }
 }
 
-export function CookieConsent() {
-  const [visible, setVisible] = useState(false);
-  const [accepted, setAccepted] = useState(false);
+// The stored choice, held outside React so it can be read through
+// useSyncExternalStore. localStorage does not exist while the page is
+// rendered on the server, and reading it in an effect instead would mean
+// setting state during the first render pass - the thing useSyncExternalStore
+// is built to avoid.
+type Status = "unknown" | "pending" | "accepted" | "declined";
 
-  useEffect(() => {
+let cachedStatus: Status | null = null;
+const listeners = new Set<() => void>();
+
+function subscribe(listener: () => void) {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+function getSnapshot(): Status {
+  if (cachedStatus === null) {
     const existing = readConsent();
-    if (!existing) {
-      setVisible(true);
-    } else if (existing.choice === "accepted") {
-      setAccepted(true);
-    }
-  }, []);
+    cachedStatus = existing ? existing.choice : "pending";
+  }
+  return cachedStatus;
+}
+
+// Nothing is known on the server, so nothing renders there: no banner
+// flashes into the HTML before the visitor's stored choice is read.
+function getServerSnapshot(): Status {
+  return "unknown";
+}
+
+function choose(choice: Consent["choice"]) {
+  writeConsent(choice);
+  cachedStatus = choice;
+  listeners.forEach((listener) => listener());
+}
+
+export function CookieConsent() {
+  const status = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const visible = status === "pending";
+  const accepted = status === "accepted";
 
   const measurementId = siteConfig.analytics.googleMeasurementId;
 
@@ -88,21 +117,14 @@ export function CookieConsent() {
             <div className="flex flex-shrink-0 gap-3">
               <button
                 type="button"
-                onClick={() => {
-                  writeConsent("declined");
-                  setVisible(false);
-                }}
+                onClick={() => choose("declined")}
                 className="rounded-full border border-border px-5 py-2.5 text-sm font-medium hover:bg-surface"
               >
                 Decline
               </button>
               <button
                 type="button"
-                onClick={() => {
-                  writeConsent("accepted");
-                  setAccepted(true);
-                  setVisible(false);
-                }}
+                onClick={() => choose("accepted")}
                 className="rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background hover:opacity-90"
               >
                 Accept

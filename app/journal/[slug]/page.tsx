@@ -6,6 +6,7 @@ import { draftMode } from "next/headers";
 import { RichText } from "@/components/RichText";
 import { PillButton } from "@/components/PillButton";
 import { getArticle } from "@/lib/content";
+import { focalPosition } from "@/lib/image";
 import { toPlainText } from "@/lib/portable-text";
 
 export async function generateMetadata({
@@ -66,7 +67,10 @@ export default async function ArticlePage({
               alt={article.author.name}
               width={36}
               height={36}
-              className="h-9 w-9 rounded-full object-cover"
+              className="h-9 w-9 flex-shrink-0 rounded-full object-cover"
+              style={{
+                objectPosition: focalPosition(article.author.avatarHotspot),
+              }}
             />
           ) : (
             <div className="h-9 w-9 rounded-full bg-border" aria-hidden />
@@ -89,13 +93,7 @@ export default async function ArticlePage({
             sizes="(min-width: 768px) 768px, 100vw"
             priority
             className="object-cover"
-            style={{
-              objectPosition: article.coverHotspot
-                ? `${Math.round(article.coverHotspot.x * 100)}% ${Math.round(
-                    article.coverHotspot.y * 100
-                  )}%`
-                : "center",
-            }}
+            style={{ objectPosition: focalPosition(article.coverHotspot) }}
           />
         </div>
       )}

@@ -28,7 +28,22 @@ export default defineType({
       title: "Body",
       description: "Select any word or phrase to add a link.",
       type: "array",
-      of: [richTextBlock(), { type: "image" }],
+      of: [
+        richTextBlock(),
+        {
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: "alt",
+              title: "Alt text",
+              type: "string",
+              description:
+                "What the photo shows, in a few words. Read aloud by screen readers and used by Google.",
+            }),
+          ],
+        },
+      ],
     }),
     defineField({ name: "seo", title: "SEO", type: "seo" }),
     defineField({ name: "publishedAt", title: "Published at", type: "datetime" }),

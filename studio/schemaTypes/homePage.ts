@@ -1,5 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { richTextBlock } from "./shared/richText";
+import { SectionOrderInput } from "../components/SectionOrderInput";
+import { DEFAULT_SECTION_ORDER } from "./shared/sections";
 
 // Singleton: everything editable on the one-page site, grouped into tabs
 // so Anton can find a block without hunting through a flat field list.
@@ -9,6 +11,7 @@ export default defineType({
   title: "Home Page",
   type: "document",
   groups: [
+    { name: "layout", title: "Layout" },
     { name: "hero", title: "Hero" },
     { name: "about", title: "About" },
     { name: "pricing", title: "Pricing" },
@@ -17,6 +20,18 @@ export default defineType({
     { name: "seo", title: "SEO" },
   ],
   fields: [
+    defineField({
+      name: "sectionOrder",
+      title: "Order of the blocks on the page",
+      description:
+        "Use the arrows to move a block up or down. The change shows on the site after the next publish. The hero at the very top always stays first.",
+      type: "array",
+      group: "layout",
+      of: [defineArrayMember({ type: "string" })],
+      initialValue: [...DEFAULT_SECTION_ORDER],
+      components: { input: SectionOrderInput },
+    }),
+
     defineField({
       name: "heroTitle",
       title: "Hero title",
@@ -140,7 +155,7 @@ export default defineType({
       name: "pricingLayout",
       title: "Layout - cards per row",
       description:
-        "How many pricing cards sit side by side on each screen size. The cards resize themselves to fit, so 2, 3 or 4 all stay balanced. Leave empty to use the defaults (phone 1, tablet 2, desktop 3).",
+        "How many pricing cards sit side by side on each screen size. The cards resize themselves to fit, so 2, 3 or 4 all stay balanced. Leave empty to use the defaults (phone 1, tablet 2, desktop 4). \"Tablet\" covers everything from 640px to 1279px wide, which includes an iPad in landscape; \"Desktop\" starts at 1280px.",
       type: "object",
       group: "pricing",
       options: { columns: 3 },
