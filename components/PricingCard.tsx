@@ -10,10 +10,16 @@ export function PricingCard({
   features: string[];
 }) {
   return (
-    <div className="rounded-3xl border border-border bg-background p-6 sm:p-7">
+    // flex column + mt-auto on the price: with 3-4 cards side by side the
+    // feature lists are rarely the same length, and this keeps every price
+    // pill on the same line instead of floating mid-card.
+    // No h-full here: grid already stretches cards to equal height, and a
+    // percentage height on top of that overflows the row and eats the gap
+    // between rows when the cards wrap onto a second line.
+    <div className="flex flex-col rounded-3xl border border-border bg-background p-6 sm:p-7">
       <p className="font-semibold">{name}</p>
       <p className="mt-1 text-sm text-muted">{tagline}</p>
-      <ul className="mt-6 space-y-3 text-sm">
+      <ul className="mt-6 flex-1 space-y-3 text-sm">
         {features.map((feature) => (
           <li key={feature} className="flex items-start gap-3">
             <span className="mt-0.5 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-foreground">

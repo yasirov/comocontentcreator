@@ -27,6 +27,43 @@ export function toBlocks(paragraphs: string[]): PortableTextBlock[] {
   return paragraphs.map(toBlock);
 }
 
+// Like toBlock, but turns one or more exact substrings into real Portable
+// Text links (a markDef + a marked span) instead of plain text - used
+// wherever fallback/placeholder copy needs the same "select text -> add a
+// link" backlink that Studio's rich-text editor gives real content.
+// Matches are found in the order they appear in `text`; a link whose text
+// isn't found in the paragraph is silently skipped rather than throwing,
+// since fallback copy sometimes gets reworded independently of its links.
+export function toBlockWithLinks(
+  text: string,
+  links: { text: string; href: string }[]
+): PortableTextBlock {
+  const matches = links
+    .map((link) => ({ ...link, index: text.indexOf(link.text) }))
+    .filter((link) => link.index !== -1)
+    .sort((a, b) => a.index - b.index);
+
+  const children: PortableTextBlock["children"] = [];
+  const markDefs: NonNullable<PortableTextBlock["markDefs"]> = [];
+  let cursor = 0;
+
+  matches.forEach((match, i) => {
+    if (match.index > cursor) {
+      children.push({ _type: "span", text: text.slice(cursor, match.index) });
+    }
+    const key = `link${i}`;
+    markDefs.push({ _key: key, _type: "link", href: match.href });
+    children.push({ _type: "span", text: match.text, marks: [key] });
+    cursor = match.index + match.text.length;
+  });
+
+  if (cursor < text.length) {
+    children.push({ _type: "span", text: text.slice(cursor) });
+  }
+
+  return { _type: "block", style: "normal", children, markDefs };
+}
+
 // Accepts whatever a field currently holds - real Portable Text blocks, an
 // array of plain strings (the shape these fields had before the rich-text
 // migration), a single string, or nothing - and always returns valid

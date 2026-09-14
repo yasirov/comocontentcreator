@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { draftMode } from "next/headers";
 import Image from "next/image";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -9,8 +10,8 @@ import { ContactSection } from "@/components/ContactSection";
 import { FaqItem } from "@/components/FaqItem";
 import { RichText } from "@/components/RichText";
 import { JsonLd } from "@/components/JsonLd";
-import { faqSchema, serviceSchema } from "@/lib/schema";
-import { getHomePage, getTestimonials } from "@/lib/content";
+import { faqSchema, serviceSchema, websiteSchema } from "@/lib/schema";
+import { getHomePage, getTestimonials, type CardGridLayout } from "@/lib/content";
 import { siteConfig } from "@/lib/site-config";
 import { toPlainText } from "@/lib/portable-text";
 
@@ -28,6 +29,21 @@ function instagramHandle(url: string) {
 function focalPosition(hotspot?: { x: number; y: number }) {
   if (!hotspot) return undefined;
   return `${Math.round(hotspot.x * 100)}% ${Math.round(hotspot.y * 100)}%`;
+}
+
+// Turns the per-breakpoint column counts from Studio into the CSS variables
+// that .card-grid (app/globals.css) reads. Never asks for more columns than
+// there are cards, so two cards in a "3 per row" layout still fill the row
+// instead of leaving a hole - and the cards resize to match.
+function cardGridStyle(layout: CardGridLayout, cardCount: number) {
+  const columns = (value: number | undefined, fallback: number) =>
+    Math.max(1, Math.min(value || fallback, cardCount || 1));
+
+  return {
+    "--cols-mobile": columns(layout.mobile, 1),
+    "--cols-tablet": columns(layout.tablet, 2),
+    "--cols-desktop": columns(layout.desktop, 3),
+  } as CSSProperties;
 }
 
 export default async function Home() {
@@ -53,9 +69,11 @@ export default async function Home() {
           home.pricingPackages.map((p) => ({
             name: `${p.name} - ${p.tagline}`,
             description: p.features.join(", "),
+            price: p.price,
           }))
         )}
       />
+      <JsonLd data={websiteSchema()} />
 
       <section className="bg-surface">
         <div className="mx-auto max-w-6xl px-6 pt-16 pb-10 md:pt-24">
@@ -174,7 +192,10 @@ export default async function Home() {
           align="center"
           description={home.pricingNote}
         />
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 max-w-3xl mx-auto">
+        <div
+          className="card-grid mt-12"
+          style={cardGridStyle(home.pricingLayout, home.pricingPackages.length)}
+        >
           {home.pricingPackages.map((pkg) => (
             <PricingCard key={pkg.name} {...pkg} />
           ))}
@@ -230,6 +251,23 @@ export default async function Home() {
           instagramUrl={home.instagramUrl}
           packages={home.pricingPackages}
         />
+
+        {/* Quiet prose close to the foot of the page. Visually it's the
+            smallest type on the site, but it's the one block that states the
+            service in plain sentences - which is what a search engine or an
+            AI assistant quotes when someone asks what this studio does. */}
+        {home.seoIntro.length > 0 && (
+          <section className="border-t border-border">
+            <div className="mx-auto max-w-3xl px-6 py-16">
+              <h2 className="text-sm font-semibold tracking-tight text-foreground">
+                About {siteConfig.name}
+              </h2>
+              <div className="mt-4 text-sm leading-relaxed text-muted [&_a]:underline">
+                <RichText value={home.seoIntro} />
+              </div>
+            </div>
+          </section>
+        )}
       </div>
     </>
   );

@@ -116,3 +116,14 @@ export const faqsPlain = [
       "Send us your date and coverage option through the contact form below and we'll confirm availability and next steps directly.",
   },
 ];
+// Plain-language summary rendered near the foot of the homepage. Its job is
+// to state, in full sentences rather than marketing fragments, what this
+// business is, where it works, what it delivers and what it is not - the
+// kind of copy a search engine or an AI assistant can lift a correct answer
+// from without having to infer it from headings and price cards.
+export const seoIntroPlain = [
+  "Como Content Creator is a wedding content creation service based in Como, Italy, working across Lake Como - Bellagio, Varenna, Menaggio, Cernobbio and the villas and lakeside venues around them. The studio was founded by Sabina Yasirova, co-founder and producer at the wedding film studio YASIROV Films, and works with a small team of content creators.",
+  "A wedding content creator films your day vertically, mostly on a phone and, on the larger packages, on a camera as well. The output is social-ready: short Reels of up to 15 seconds filmed throughout the day, plus one Highlight Reel of up to a minute. Part of it reaches you while the wedding is still happening; the rest is edited and delivered within 48 hours on the phone-shot packages and 72 hours on the camera packages.",
+  "This is not a replacement for a wedding videographer, and it is not meant to be. A wedding film is a crafted, cinematic record of the day, shot and edited over weeks - it is the version you will still be watching in ten years, and for most couples it remains the more important of the two. Content creation is a separate, lighter service that runs alongside it and answers a different need: having the day online, in your own voice, while people are still talking about it.",
+  "Packages run from €1,200 to €2,500 depending on hours of coverage, the number of Reels and whether the day is filmed on a phone, on a camera, or with two cameras and two creators. Travel and accommodation are included for weddings on Lake Como itself; locations further out are quoted separately.",
+];

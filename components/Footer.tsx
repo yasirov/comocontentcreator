@@ -27,6 +27,12 @@ export function Footer() {
                   {item.label}
                 </Link>
               ))}
+              <Link
+                href="/privacy"
+                className="inline-block py-1.5 hover:text-foreground"
+              >
+                Privacy Policy
+              </Link>
             </div>
           </div>
           <div>

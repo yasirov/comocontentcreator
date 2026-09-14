@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Script from "next/script";
 import { useState, type FormEvent } from "react";
 import { siteConfig } from "@/lib/site-config";
@@ -208,15 +209,29 @@ export function ContactSection({
               </label>
             </div>
 
-            <label className="flex items-start gap-3 py-2 text-sm text-muted">
+            {/* The link sits outside the <label> on purpose: nested inside
+                it, clicking through to the notice would also toggle the
+                checkbox. */}
+            <div className="flex items-start gap-3 py-2 text-sm text-muted">
               <input
+                id="consent"
                 type="checkbox"
                 name="consent"
                 required
                 className="mt-0.5 h-5 w-5 flex-shrink-0 accent-foreground"
               />
-              <span>I agree to the processing of my data</span>
-            </label>
+              <span>
+                <label htmlFor="consent">
+                  I agree to the processing of my data as described in the
+                </label>{" "}
+                <Link
+                  href="/privacy"
+                  className="underline decoration-1 underline-offset-2 hover:text-foreground"
+                >
+                  Privacy Policy
+                </Link>
+              </span>
+            </div>
 
             {TURNSTILE_SITE_KEY && (
               <>

@@ -31,6 +31,7 @@ export const homePageQuery = `*[_type == "homePage"][0]{
   pricingEyebrow,
   pricingTitle,
   pricingNote,
+  pricingLayout,
   pricingPackages,
   faqEyebrow,
   faqTitle,
@@ -41,6 +42,7 @@ export const homePageQuery = `*[_type == "homePage"][0]{
   contactPhone,
   contactEmail,
   instagramUrl,
+  seoIntro,
   seo
 }`;
 
@@ -59,6 +61,7 @@ export const articlesQuery = `*[_type == "article" && defined(slug.current)] | o
   excerpt,
   publishedAt,
   "coverImage": coverImage.asset->url + "${COVER_PARAMS}",
+  "coverHotspot": coverImage.hotspot,
   "region": region->name,
   author->{
     name,
@@ -74,6 +77,7 @@ export const articleBySlugQuery = `*[_type == "article" && slug.current == $slug
   publishedAt,
   body,
   "coverImage": coverImage.asset->url + "${COVER_PARAMS}",
+  "coverHotspot": coverImage.hotspot,
   "region": region->name,
   author->{
     name,

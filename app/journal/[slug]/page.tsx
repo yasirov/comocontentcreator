@@ -86,7 +86,16 @@ export default async function ArticlePage({
             src={article.coverImage}
             alt={article.title}
             fill
+            sizes="(min-width: 768px) 768px, 100vw"
+            priority
             className="object-cover"
+            style={{
+              objectPosition: article.coverHotspot
+                ? `${Math.round(article.coverHotspot.x * 100)}% ${Math.round(
+                    article.coverHotspot.y * 100
+                  )}%`
+                : "center",
+            }}
           />
         </div>
       )}

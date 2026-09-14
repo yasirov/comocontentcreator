@@ -9,11 +9,13 @@ import {
   pricingPackages as placeholderPricingPackages,
   faqsPlain,
   aboutParagraphsPlain,
+  seoIntroPlain,
 } from "@/lib/data";
 import { siteConfig } from "@/lib/site-config";
 import {
   toBlocks,
   toBlock,
+  toBlockWithLinks,
   normalizeRichText,
   type PortableTextBlock,
 } from "@/lib/portable-text";
@@ -37,6 +39,9 @@ export type Article = {
   excerpt: string;
   publishedAt: string;
   coverImage?: string;
+  // Same hotspot mechanism as the founder photos: lets a portrait-shaped
+  // cover keep the face in frame inside a landscape card.
+  coverHotspot?: { x: number; y: number };
   region?: string;
   author?: { name: string; role?: string; avatar?: string };
   body?: PortableTextBlock[];
@@ -93,6 +98,10 @@ export type HomePage = {
   contactPhone: string;
   contactEmail: string;
   instagramUrl: string;
+  // Plain-language summary near the foot of the page, for readers who
+  // skim and for search engines / AI assistants that need the service
+  // described in sentences rather than inferred from price cards.
+  seoIntro: PortableTextBlock[];
 };
 
 const fallbackHomePage: HomePage = {
@@ -125,6 +134,15 @@ const fallbackHomePage: HomePage = {
   contactPhone: siteConfig.contactPhone,
   contactEmail: siteConfig.contactEmail,
   instagramUrl: siteConfig.instagram,
+  // First paragraph names YASIROV Films - link it to yasirov.com rather
+  // than leaving the studio's own name unlinked in the one place on this
+  // site that mentions it.
+  seoIntro: [
+    toBlockWithLinks(seoIntroPlain[0], [
+      { text: "YASIROV Films", href: "https://yasirov.com" },
+    ]),
+    ...toBlocks(seoIntroPlain.slice(1)),
+  ],
 };
 
 export async function getHomePage(preview = false): Promise<HomePage> {
@@ -172,6 +190,7 @@ export async function getHomePage(preview = false): Promise<HomePage> {
       contactPhone: doc.contactPhone || fallbackHomePage.contactPhone,
       contactEmail: doc.contactEmail || fallbackHomePage.contactEmail,
       instagramUrl: doc.instagramUrl || fallbackHomePage.instagramUrl,
+      seoIntro: normalizeRichText(doc.seoIntro, fallbackHomePage.seoIntro),
     };
   } catch {
     return fallbackHomePage;

@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
 import { VisualEditingClient } from "@/components/VisualEditingClient";
+import { CookieConsent } from "@/components/CookieConsent";
 import { organizationSchema } from "@/lib/schema";
 import { siteConfig } from "@/lib/site-config";
 
@@ -64,6 +65,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <CookieConsent />
         {isPreview && <VisualEditingClient />}
       </body>
     </html>

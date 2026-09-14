@@ -38,6 +38,41 @@ html {
     linear-gradient(165deg, #1c1c1e 0%, #101012 45%, #000000 100%);
 }
 
+/* Card grid with per-breakpoint column counts, driven by CSS variables that
+   come straight from Studio (Pricing -> Layout). Tailwind can't build class
+   names at runtime, so the column count is passed in as --cols-* on the
+   element and read here.
+
+   Breakpoints: phone (< 640px), tablet (640-1023px), desktop (>= 1024px).
+
+   Cards size themselves: minmax(0, 1fr) splits the row evenly, and the
+   max-width caps each card at ~24rem so two cards don't stretch into
+   billboards on a wide screen. Four cards get the full container. */
+.card-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(var(--cols-mobile, 1), minmax(0, 1fr));
+  margin-inline: auto;
+}
+
+@media (min-width: 640px) {
+  .card-grid {
+    grid-template-columns: repeat(var(--cols-tablet, 2), minmax(0, 1fr));
+    max-width: calc(
+      var(--cols-tablet, 2) * 24rem + (var(--cols-tablet, 2) - 1) * 1.5rem
+    );
+  }
+}
+
+@media (min-width: 1024px) {
+  .card-grid {
+    grid-template-columns: repeat(var(--cols-desktop, 3), minmax(0, 1fr));
+    max-width: calc(
+      var(--cols-desktop, 3) * 24rem + (var(--cols-desktop, 3) - 1) * 1.5rem
+    );
+  }
+}
+
 /* Visible keyboard focus everywhere. Inputs suppress the default outline in
    favour of a border change, which is too subtle on its own, so every
    interactive element gets this ring on keyboard focus only. */

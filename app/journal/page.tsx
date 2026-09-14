@@ -16,10 +16,11 @@ export default async function JournalPage() {
   const articles = await getArticles(isPreview);
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-20">
+    <div className="mx-auto max-w-6xl px-6 py-20">
       <SectionHeading
         eyebrow="Journal"
         title="Notes from the field"
+        align="center"
         description="Real weddings and content-creation notes from Lake Como."
       />
       <div className="mt-14">

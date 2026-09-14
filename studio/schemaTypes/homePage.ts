@@ -137,8 +137,63 @@ export default defineType({
         "Transport is included in the price for shoots taking place on Lake Como.",
     }),
     defineField({
+      name: "pricingLayout",
+      title: "Layout - cards per row",
+      description:
+        "How many pricing cards sit side by side on each screen size. The cards resize themselves to fit, so 2, 3 or 4 all stay balanced. Leave empty to use the defaults (phone 1, tablet 2, desktop 3).",
+      type: "object",
+      group: "pricing",
+      options: { columns: 3 },
+      fields: [
+        defineField({
+          name: "mobile",
+          title: "Phone",
+          type: "number",
+          initialValue: 1,
+          options: {
+            list: [
+              { title: "1 card", value: 1 },
+              { title: "2 cards", value: 2 },
+            ],
+            layout: "dropdown",
+          },
+        }),
+        defineField({
+          name: "tablet",
+          title: "Tablet",
+          type: "number",
+          initialValue: 2,
+          options: {
+            list: [
+              { title: "1 card", value: 1 },
+              { title: "2 cards", value: 2 },
+              { title: "3 cards", value: 3 },
+            ],
+            layout: "dropdown",
+          },
+        }),
+        defineField({
+          name: "desktop",
+          title: "Desktop",
+          type: "number",
+          initialValue: 3,
+          options: {
+            list: [
+              { title: "1 card", value: 1 },
+              { title: "2 cards", value: 2 },
+              { title: "3 cards", value: 3 },
+              { title: "4 cards", value: 4 },
+            ],
+            layout: "dropdown",
+          },
+        }),
+      ],
+    }),
+    defineField({
       name: "pricingPackages",
       title: "Packages",
+      description:
+        "Each package is one card. Use the ⋮ menu on a card to duplicate it, then edit the copy - that's how you add a 3rd or 4th card. Drag to reorder.",
       type: "array",
       group: "pricing",
       of: [
@@ -246,6 +301,15 @@ export default defineType({
       group: "contact",
     }),
 
+    defineField({
+      name: "seoIntro",
+      title: "Summary paragraphs (shown at the foot of the home page)",
+      description:
+        "Plain, factual sentences describing what the service is, where it works, what it delivers and what it is not. Google and AI assistants quote this directly, so write it in full sentences rather than marketing fragments, and keep the prices and delivery times in it accurate.",
+      type: "array",
+      of: [richTextBlock()],
+      group: "seo",
+    }),
     defineField({
       name: "seo",
       title: "SEO",
